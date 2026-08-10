@@ -6,4 +6,34 @@ import '../styles/os.css';
 
 <BaseLayout title="Slaughter OS — Hayden Slaughter" noindex>
   <Desktop client:only="preact" />
+  <noscript>
+    <div class="noscript">
+      <h1>Slaughter OS needs JavaScript</h1>
+      <p>
+        This is the interactive desktop version of Hayden Slaughter's portfolio. It needs
+        JavaScript. Everything is also available as plain pages:
+      </p>
+      <p>
+        <a href="/">Home</a> · <a href="/work">The work</a> · <a href="/cv">CV</a> ·
+        <a href="mailto:hello@haydenslaughter.co.uk">Contact</a>
+      </p>
+    </div>
+  </noscript>
+
+  <style>
+    .noscript {
+      max-width: 640px;
+      margin: 12vh auto;
+      padding: 0 24px;
+      font-family: var(--font-body);
+    }
+    .noscript h1 {
+      font-size: 28px;
+    }
+    .noscript p {
+      margin: 16px 0 0;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+  </style>
 </BaseLayout>
