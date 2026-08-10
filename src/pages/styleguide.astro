@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+import Chip from '../components/Chip.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import MetricCallout from '../components/MetricCallout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import WindowFrame from '../components/WindowFrame.astro';
+
+const colors = [
+  ['--ink', 'ink'],
+  ['--teal', 'teal'],
+  ['--paper', 'paper'],
+  ['--canvas', 'canvas'],
+  ['--mint', 'mint'],
+  ['--yellow', 'yellow'],
+  ['--red', 'red'],
+  ['--navy', 'navy'],
+  ['--grey-1', 'grey-1'],
+  ['--grey-2', 'grey-2'],
+  ['--grey-3', 'grey-3'],
+  ['--grey-4', 'grey-4'],
+];
+
+const typeScale = [
+  ['--text-h1', 'Display H1 — Space Grotesk 700', 'font-display'],
+  ['--text-h2', 'Display H2', 'font-display'],
+  ['--text-h3', 'Display H3', 'font-display'],
+  ['--text-body-size', 'Body — Archivo, the reading face', 'font-body'],
+  ['--text-small', 'Small / meta copy', 'font-body'],
+];
+---
+
+<BaseLayout title="Styleguide — Slaughter OS" noindex>
+  <div class="container sg">
+    <header class="sg__head">
+      <Eyebrow color="var(--teal)">Design system</Eyebrow>
+      <h1>Slaughter OS styleguide</h1>
+      <p class="measure">
+        Register B (document voice) tokens and components, plus the Register A
+        window chrome. Reference page — not indexed, not linked from the site.
+      </p>
+    </header>
+
+    <section class="sg__section">
+      <SectionHeader number="01" title="Colour" />
+      <div class="swatches">
+        {
+          colors.map(([varName, label]) => (
+            <div class="swatch">
+              <div class="swatch__chip" style={`background:var(${varName})`} />
+              <p class="swatch__name">{label}</p>
+              <p class="swatch__var">{varName}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="sg__section">
+      <SectionHeader number="02" title="Type" />
+      <div class="stack">
+        {
+          typeScale.map(([size, label, family]) => (
+            <p style={`font-family:var(--${family});font-size:var(${size});font-weight:700;margin:0;letter-spacing:var(--tracking-display)`}>
+              {label}
+            </p>
+          ))
+        }
+        <p class="eyebrow">Silkscreen label · eyebrow / section number</p>
+        <p style="font-family:var(--font-mono);font-size:var(--text-small)">
+          IBM Plex Mono — chips, dates, code-y details
+        </p>
+      </div>
+    </section>
+
+    <section class="sg__section">
+      <SectionHeader number="03" title="Buttons" />
+      <div class="row">
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="link">Link style</Button>
+      </div>
+    </section>
+
+    <section class="sg__section">
+      <SectionHeader number="04" title="Chips" />
+      <div class="row">
+        <Chip variant="outline">Outline</Chip>
+        <Chip variant="inverted">Inverted</Chip>
+        <Chip variant="highlight">Highlight</Chip>
+      </div>
+    </section>
+
+    <section class="sg__section">
+      <SectionHeader number="05" title="Cards & metrics" />
+      <div class="grid">
+        <Card eyebrow="Case study" title="Indra — EV charging">
+          Commissioning redesigned from hours to minutes; installers turned from
+          critics into advocates.
+        </Card>
+        <Card eyebrow="Independent" title="Olive" shadow={false}>
+          Turns cookbook pages, screenshots and reels into clean recipes. Built
+          solo with AI.
+        </Card>
+        <MetricCallout value="4.2★" label="Customer app rating, up from 2 stars — #1 in the UK" />
+        <MetricCallout value="26" label="Customer interviews across 9 countries in 5 weeks" />
+      </div>
+    </section>
+
+    <section class="sg__section">
+      <SectionHeader number="06" title="Window chrome (Register A)" />
+      <div class="os-stage">
+        <WindowFrame title="ABOUT.ME" width={420}>
+          <p style="margin:0 0 10px">
+            The OS register: Verdana body, Silkscreen chrome, navy title bar,
+            bevelled buttons.
+          </p>
+          <p style="margin:0">Drag, resize and focus arrive with the window manager.</p>
+        </WindowFrame>
+      </div>
+    </section>
+  </div>
+
+  <style>
+    .sg {
+      padding-block: var(--space-7);
+    }
+    .sg__head {
+      margin-bottom: var(--space-7);
+    }
+    .sg__head h1 {
+      margin: 10px 0 12px;
+    }
+    .sg__section {
+      margin-bottom: var(--space-7);
+    }
+    .sg__section > :global(.section-header) {
+      margin-bottom: var(--space-3);
+    }
+    .row {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: var(--space-2);
+    }
+    .swatch__chip {
+      height: 64px;
+      border: var(--border);
+    }
+    .swatch__name {
+      margin: 8px 0 0;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .swatch__var {
+      margin: 2px 0 0;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--grey-2);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-2);
+    }
+    .os-stage {
+      background: var(--teal);
+      padding: var(--space-5);
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</BaseLayout>

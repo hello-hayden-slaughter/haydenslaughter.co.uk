@@ -1,0 +1,23 @@
+---
+interface Props {
+  /** Any CSS colour value. Defaults to the faint grey from the source. */
+  color?: string;
+  class?: string;
+}
+
+const { color = 'var(--grey-2)', class: className } = Astro.props;
+---
+
+<p class:list={['eyebrow-c', className]} style={`color:${color}`}>
+  <slot />
+</p>
+
+<style>
+  .eyebrow-c {
+    margin: 0;
+    font-family: var(--font-label);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+</style>

@@ -1,0 +1,36 @@
+---
+interface Props {
+  number: string;
+  title: string;
+  class?: string;
+}
+
+const { number, title, class: className } = Astro.props;
+---
+
+<div class:list={['section-header', className]}>
+  <span class="section-header__number">{number}</span>
+  <h2 class="section-header__title">{title}</h2>
+</div>
+
+<style>
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    border-bottom: var(--border);
+    padding-bottom: 14px;
+  }
+  .section-header__number {
+    font-family: var(--font-label);
+    font-size: 30px;
+    color: var(--teal);
+  }
+  .section-header__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 34px;
+    letter-spacing: -0.02em;
+  }
+</style>

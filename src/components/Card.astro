@@ -1,0 +1,49 @@
+---
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  shadow?: boolean;
+  class?: string;
+}
+
+const { eyebrow, title, shadow = true, class: className } = Astro.props;
+---
+
+<div class:list={['card', { 'card--flat': !shadow }, className]}>
+  {eyebrow && <p class="card__eyebrow">{eyebrow}</p>}
+  {title && <p class="card__title">{title}</p>}
+  <div class="card__body"><slot /></div>
+</div>
+
+<style>
+  .card {
+    border: var(--border);
+    background: var(--paper);
+    box-shadow: var(--shadow-hard);
+    padding: 18px;
+    box-sizing: border-box;
+  }
+  .card--flat {
+    box-shadow: none;
+  }
+  .card__eyebrow {
+    margin: 0 0 6px;
+    font-family: var(--font-label);
+    font-size: 9px;
+    color: var(--teal);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .card__title {
+    margin: 0 0 4px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .card__body {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--grey-3);
+    line-height: 1.5;
+  }
+</style>

@@ -1,0 +1,37 @@
+---
+interface Props {
+  value: string;
+  label: string;
+  class?: string;
+}
+
+const { value, label, class: className } = Astro.props;
+---
+
+<div class:list={['metric', className]}>
+  <span class="metric__value">{value}</span>
+  <span class="metric__label">{label}</span>
+</div>
+
+<style>
+  .metric {
+    background: var(--ink);
+    padding: 18px 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .metric__value {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 34px;
+    color: var(--mint);
+    letter-spacing: -0.02em;
+  }
+  .metric__label {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--paper);
+    line-height: 1.4;
+  }
+</style>

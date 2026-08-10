@@ -1,0 +1,35 @@
+---
+interface Props {
+  variant?: 'outline' | 'inverted' | 'highlight';
+  class?: string;
+}
+
+const { variant = 'outline', class: className } = Astro.props;
+---
+
+<span class:list={['chip', `chip--${variant}`, className]}>
+  <slot />
+</span>
+
+<style>
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    padding: 5px 11px;
+    display: inline-block;
+  }
+  .chip--outline {
+    border: var(--border-thin);
+    color: var(--ink);
+    background: transparent;
+  }
+  .chip--inverted {
+    background: var(--ink);
+    color: var(--mint);
+  }
+  .chip--highlight {
+    background: var(--yellow);
+    color: var(--ink);
+    border: var(--border-thin);
+  }
+</style>
