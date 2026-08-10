@@ -1,0 +1,9 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Desktop from '../components/os/Desktop.tsx';
+import '../styles/os.css';
+---
+
+<BaseLayout title="Slaughter OS — Hayden Slaughter" noindex>
+  <Desktop client:only="preact" />
+</BaseLayout>
