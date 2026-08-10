@@ -1,0 +1,281 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteNav from '../../components/SiteNav.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { caseStudies } from '../../data/caseStudies';
+
+export function getStaticPaths() {
+  return caseStudies.map((cs) => ({ params: { slug: cs.slug }, props: { cs } }));
+}
+
+const { cs } = Astro.props;
+---
+
+<BaseLayout title={`${cs.name} — Hayden Slaughter`} description={cs.oneLiner}>
+  <SiteNav />
+
+  <main>
+    <header class="cs-head">
+      <div class="container">
+        <p class="eyebrow"><a href="/work" class="cs-back">← The work</a></p>
+        <p class="cs-kind">{cs.name} · {cs.kind} · {cs.period}</p>
+        <h1 class="cs-oneliner">{cs.oneLiner}</h1>
+        <p class="cs-lede measure">{cs.lede}</p>
+      </div>
+    </header>
+
+    <section class="container cs-outcomes-wrap">
+      <div class="cs-outcomes">
+        {
+          cs.outcomes.map((o) => (
+            <div class="cs-outcome">
+              <span class="cs-outcome__value">{o.value}</span>
+              <span class="cs-outcome__label">{o.label}</span>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <div class="container cs-body">
+      {
+        cs.beats.map((beat) => (
+          <section class="beat">
+            <div class="beat__head">
+              <span class="beat__n">{beat.n}</span>
+              <div>
+                <h2 class="beat__title">{beat.title}</h2>
+                <p class="beat__subhead">{beat.subhead}</p>
+              </div>
+            </div>
+            <div class="beat__body measure">
+              {beat.body.map((p) => (
+                <p>{p}</p>
+              ))}
+              {beat.stat && <p class="beat__stat">{beat.stat}</p>}
+            </div>
+            {beat.quote && (
+              <figure class="pull">
+                <blockquote>{beat.quote.text}</blockquote>
+                <figcaption>{beat.quote.attrib}</figcaption>
+              </figure>
+            )}
+          </section>
+        ))
+      }
+
+      {
+        cs.depth.length > 0 && (
+          <section class="depth">
+            <h2 class="depth__title">More of what I built</h2>
+            <p class="depth__note measure">
+              The main story is above. This is the rest of the surface area.
+            </p>
+            <div class="depth__grid">
+              {cs.depth.map((d) => (
+                <div class="depth__item">
+                  <h3>{d.title}</h3>
+                  <p>{d.body}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <section class="throughline">
+        <p class="eyebrow">The through-line</p>
+        <p class="throughline__body measure">{cs.throughLine}</p>
+        <p class="cs-next">
+          <a href="/work">← Back to the work</a>
+          <a href="/cv">Read the CV →</a>
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <SiteFooter />
+
+  <style>
+    .cs-head {
+      background: var(--ink);
+      color: var(--paper);
+      padding-block: var(--space-7);
+    }
+    .cs-back {
+      color: var(--mint);
+      text-decoration: none;
+    }
+    .cs-kind {
+      margin: 8px 0 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--grey-1);
+    }
+    .cs-oneliner {
+      margin: 18px 0 0;
+      color: var(--paper);
+      max-width: 20ch;
+      font-size: clamp(30px, 5vw, 48px);
+    }
+    .cs-lede {
+      margin: 20px 0 0;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--grey-1);
+    }
+
+    .cs-outcomes-wrap {
+      margin-top: calc(var(--space-5) * -1);
+      margin-bottom: var(--space-7);
+    }
+    .cs-outcomes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2px;
+      background: var(--ink);
+      border: var(--border);
+      box-shadow: var(--shadow-hard);
+    }
+    .cs-outcome {
+      background: var(--paper);
+      padding: 24px 22px;
+    }
+    .cs-outcome__value {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      color: var(--teal);
+    }
+    .cs-outcome__label {
+      display: block;
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--grey-3);
+    }
+
+    .cs-body {
+      padding-bottom: var(--space-5);
+    }
+    .beat {
+      padding: var(--space-5) 0;
+      border-top: var(--rule-dotted);
+    }
+    .beat__head {
+      display: flex;
+      gap: 20px;
+      align-items: baseline;
+      margin-bottom: var(--space-2);
+    }
+    .beat__n {
+      font-family: var(--font-label);
+      font-size: 24px;
+      color: var(--teal);
+      flex: none;
+    }
+    .beat__title {
+      margin: 0;
+      font-size: clamp(24px, 3.5vw, 32px);
+    }
+    .beat__subhead {
+      margin: 8px 0 0;
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--grey-3);
+    }
+    .beat__body p {
+      margin: 0 0 14px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .beat__stat {
+      font-family: var(--font-mono) !important;
+      font-size: 14px !important;
+      background: var(--mint);
+      color: var(--ink);
+      display: inline-block;
+      padding: 10px 14px;
+      border: var(--border-thin);
+    }
+    .pull {
+      margin: var(--space-3) 0 0;
+      border-left: 4px solid var(--teal);
+      padding: 6px 0 6px 20px;
+      max-width: 46ch;
+    }
+    .pull blockquote {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 22px;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .pull figcaption {
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--grey-2);
+    }
+
+    .depth {
+      padding: var(--space-5) 0;
+      border-top: var(--border);
+    }
+    .depth__title {
+      margin: 0;
+      font-size: 24px;
+    }
+    .depth__note {
+      margin: 8px 0 var(--space-3);
+      color: var(--grey-3);
+    }
+    .depth__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--space-2);
+    }
+    .depth__item {
+      border: var(--border);
+      background: var(--surface-card);
+      padding: 20px;
+      box-shadow: var(--shadow-hard);
+    }
+    .depth__item h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+    .depth__item p {
+      margin: 0;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--grey-3);
+    }
+
+    .throughline {
+      padding: var(--space-5) 0 0;
+      border-top: var(--rule-dotted);
+    }
+    .throughline__body {
+      margin: 10px 0 0;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+    .cs-next {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-2);
+      margin-top: var(--space-5);
+      flex-wrap: wrap;
+    }
+    .cs-next a {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      text-decoration: none;
+    }
+  </style>
+</BaseLayout>

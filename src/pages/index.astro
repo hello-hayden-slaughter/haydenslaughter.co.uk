@@ -1,67 +1,313 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const bootLines = [
-  'SLAUGHTER OS v0.1',
-  'Copyright (c) Hayden Slaughter',
-  '',
-  'Detecting hardware ............. OK',
-  'Mounting portfolio ............. OK',
-  'Loading design system .......... OK',
-  'Starting window manager ........ PENDING',
-  '',
-  'System coming online. Check back soon.',
-];
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { hero, intro, howIWork, fit, journey, builtWithAI } from '../data/site';
+import { caseStudies } from '../data/caseStudies';
 ---
 
 <BaseLayout title="Hayden Slaughter — Product Builder">
-  <main class="stage">
-    <div class="crt">
-      <pre class="boot">{bootLines.join('\n')}<span class="cursor"></span></pre>
-    </div>
+  <SiteNav />
+
+  <main>
+    <!-- Hero -->
+    <section class="container hero">
+      <p class="eyebrow">{hero.eyebrow}</p>
+      <h1 class="hero__statement">{hero.statement}</h1>
+      <p class="hero__sub measure">{hero.sub}</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="/work">See the work</a>
+        <a class="btn btn--ghost" href="/desktop">Enter Slaughter OS →</a>
+      </div>
+    </section>
+
+    <!-- Intro -->
+    <section class="container section">
+      <div class="measure prose">
+        {intro.map((p) => <p>{p}</p>)}
+      </div>
+    </section>
+
+    <!-- The work -->
+    <section class="container section" id="work">
+      <p class="eyebrow">The work</p>
+      <h2 class="section__h">Proof, twice over.</h2>
+      <div class="home-cards">
+        {
+          caseStudies.map((cs) => (
+            <a class="hcard" href={`/work/${cs.slug}`}>
+              <div class="hcard__top">
+                <span class="hcard__name">{cs.name}</span>
+                <span class="hcard__kind">{cs.kind} · {cs.period}</span>
+              </div>
+              <p class="hcard__summary">{cs.summary}</p>
+              <div class="hcard__tags">
+                {cs.tags.map((t) => (
+                  <span class="hcard__tag">{t}</span>
+                ))}
+              </div>
+              <span class="hcard__cta">Read the story →</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Built with AI -->
+    <section class="ai-band">
+      <div class="container">
+        <p class="eyebrow eyebrow--yellow">Built with AI</p>
+        <h2 class="section__h ai-band__h">{builtWithAI.lead}</h2>
+        <div class="ai-cards">
+          {
+            builtWithAI.products.map((p) => (
+              <div class="aicard">
+                <div class="aicard__top">
+                  <span class="aicard__name">{p.name}</span>
+                  <span class="aicard__status">{p.status}</span>
+                </div>
+                <p class="aicard__kind">{p.kind}</p>
+                <p class="aicard__body">{p.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- How I work -->
+    <section class="container section" id="how-i-work">
+      <p class="eyebrow">How I work</p>
+      <h2 class="section__h measure">{howIWork.statement}</h2>
+      <div class="scales">
+        {howIWork.scales.map((s) => <span class="scale">{s}</span>)}
+      </div>
+    </section>
+
+    <!-- Fit, honestly -->
+    <section class="container section" id="fit">
+      <p class="eyebrow">Fit, honestly</p>
+      <div class="measure prose">
+        {fit.map((p) => <p>{p}</p>)}
+      </div>
+      <a class="btn btn--primary fit__cta" href="mailto:hello@haydenslaughter.co.uk">Get in touch</a>
+    </section>
+
+    <!-- Journey -->
+    <section class="container section section--quiet">
+      <p class="eyebrow">The journey</p>
+      <p class="measure journey">{journey}</p>
+    </section>
   </main>
 
+  <SiteFooter />
+
   <style>
-    .stage {
-      min-height: 100dvh;
-      display: grid;
-      place-items: center;
-      background: var(--teal);
-      padding: var(--space-3);
+    .hero {
+      padding-block: var(--space-7) var(--space-5);
     }
-    .crt {
-      width: min(560px, 100%);
-      background: var(--ink);
-      border: var(--border);
-      box-shadow: var(--shadow-hard-lg);
+    .hero__statement {
+      margin: 14px 0 0;
+      font-size: clamp(34px, 6vw, 64px);
+      max-width: 18ch;
     }
-    .boot {
-      margin: 0;
-      padding: var(--space-3) var(--space-3);
-      font-family: var(--font-label);
-      font-size: var(--text-small);
-      line-height: 1.9;
-      color: var(--mint);
-      white-space: pre-wrap;
-      word-break: break-word;
+    .hero__sub {
+      margin: 22px 0 0;
+      font-size: clamp(17px, 2.4vw, 20px);
+      line-height: 1.5;
+      color: var(--grey-3);
     }
-    .cursor {
+    .hero__cta {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+      margin-top: var(--space-3);
+    }
+
+    .btn {
       display: inline-block;
-      width: 9px;
-      height: 15px;
-      margin-left: 4px;
-      background: var(--mint);
-      vertical-align: middle;
-      animation: blink 1.1s step-end infinite;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 12px 20px;
+      border: var(--border);
+      text-decoration: none;
+      cursor: pointer;
     }
-    @keyframes blink {
-      0%,
-      49% {
-        opacity: 1;
-      }
-      50%,
-      100% {
-        opacity: 0;
+    .btn--primary {
+      background: var(--ink);
+      color: var(--paper);
+      box-shadow: var(--shadow-hard-sm);
+    }
+    .btn--primary:hover {
+      background: var(--teal);
+      color: var(--paper);
+    }
+    .btn--ghost {
+      background: transparent;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .btn--ghost:hover {
+      background: var(--yellow);
+      color: var(--ink);
+    }
+
+    .section {
+      padding-block: var(--space-5);
+    }
+    .section--quiet {
+      opacity: 0.92;
+    }
+    .section__h {
+      margin: 10px 0 0;
+      font-size: clamp(26px, 4vw, 36px);
+    }
+    .prose p {
+      margin: 0 0 18px;
+      font-size: 17px;
+      line-height: 1.7;
+    }
+    .prose p:last-child {
+      margin-bottom: 0;
+    }
+
+    .home-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-3);
+    }
+    .hcard {
+      display: flex;
+      flex-direction: column;
+      border: var(--border);
+      background: var(--surface-card);
+      box-shadow: var(--shadow-hard);
+      padding: 26px 24px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+    .hcard:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 rgba(22, 19, 14, 0.85);
+    }
+    .hcard__name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+    .hcard__kind {
+      display: block;
+      margin-top: 4px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--grey-2);
+    }
+    .hcard__summary {
+      margin: 14px 0 0;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--grey-3);
+      flex: 1;
+    }
+    .hcard__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 16px 0 0;
+    }
+    .hcard__tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      border: var(--border-thin);
+      padding: 3px 9px;
+    }
+    .hcard__cta {
+      margin-top: 18px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--teal);
+    }
+
+    .ai-band {
+      background: var(--ink);
+      color: var(--paper);
+      padding-block: var(--space-7);
+      margin-block: var(--space-5);
+    }
+    .eyebrow--yellow {
+      color: var(--yellow);
+    }
+    .ai-band__h {
+      color: var(--paper);
+    }
+    .ai-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+    .aicard {
+      border: 2px solid var(--paper);
+      padding: 22px 24px;
+    }
+    .aicard__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .aicard__name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 20px;
+    }
+    .aicard__status {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--mint);
+    }
+    .aicard__kind {
+      margin: 6px 0 0;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--grey-1);
+    }
+    .aicard__body {
+      margin: 12px 0 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--grey-1);
+    }
+
+    .scales {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: var(--space-3);
+    }
+    .scale {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      border: var(--border-thin);
+      padding: 6px 12px;
+    }
+
+    .fit__cta {
+      margin-top: var(--space-3);
+    }
+    .journey {
+      margin: 12px 0 0;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--grey-3);
+    }
+
+    @media (max-width: 640px) {
+      .ai-cards {
+        grid-template-columns: 1fr;
       }
     }
   </style>

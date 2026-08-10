@@ -1,0 +1,54 @@
+---
+import { site } from '../data/site';
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <span>© {site.name}</span>
+    <span class="site-footer__mid">
+      <a href={site.links.email}>{site.email}</a>
+      <span class="site-footer__dot">·</span>
+      <a href={site.links.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+      <span class="site-footer__dot">·</span>
+      <a href="/desktop">Slaughter OS</a>
+    </span>
+    <span class="site-footer__ai">for AI readers: <a href="/llms.txt">/llms.txt</a></span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: var(--border);
+    background: var(--surface-card);
+    margin-top: var(--space-7);
+  }
+  .site-footer__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    padding-block: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--grey-3);
+  }
+  .site-footer__mid {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .site-footer a {
+    color: var(--grey-3);
+    text-decoration: none;
+  }
+  .site-footer a:hover {
+    color: var(--red);
+  }
+  .site-footer__dot {
+    color: var(--grey-1);
+  }
+  .site-footer__ai {
+    color: var(--grey-2);
+  }
+</style>

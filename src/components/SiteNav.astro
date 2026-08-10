@@ -1,0 +1,56 @@
+---
+import { nav, site } from '../data/site';
+---
+
+<header class="site-nav">
+  <div class="container site-nav__inner">
+    <a class="site-nav__name" href="/">{site.name}</a>
+    <nav class="site-nav__links" aria-label="Primary">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-nav {
+    border-bottom: var(--border);
+    background: var(--surface-card);
+  }
+  .site-nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding-block: 18px;
+  }
+  .site-nav__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .site-nav__links {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .site-nav__links a {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .site-nav__links a:hover {
+    color: var(--red);
+  }
+  @media (max-width: 520px) {
+    .site-nav__links {
+      gap: var(--space-2);
+    }
+    .site-nav__links a {
+      font-size: 12px;
+    }
+  }
+</style>

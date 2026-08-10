@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+
+<BaseLayout title="404 — file not found" noindex>
+  <SiteNav />
+
+  <main class="container nf">
+    <div class="nf__window">
+      <div class="nf__bar">
+        <span class="nf__title">ERROR</span>
+        <span class="nf__controls"><span class="nf__btn">_</span><span class="nf__btn">X</span></span>
+      </div>
+      <div class="nf__body">
+        <p class="nf__code">404</p>
+        <p class="nf__msg">That file could not be found on this disk.</p>
+        <p class="nf__hint">It may have moved, or never existed. No harm done.</p>
+        <div class="nf__actions">
+          <a class="nf__link" href="/">Back to home</a>
+          <a class="nf__link" href="/work">The work</a>
+          <a class="nf__link" href="/desktop">Slaughter OS</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <SiteFooter />
+
+  <style>
+    .nf {
+      padding-block: var(--space-7);
+      display: flex;
+      justify-content: center;
+    }
+    .nf__window {
+      width: 480px;
+      max-width: 100%;
+      border: var(--border);
+      background: var(--paper);
+      box-shadow: var(--shadow-os);
+    }
+    .nf__bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--navy);
+      color: #fff;
+      padding: 6px 8px;
+    }
+    .nf__title {
+      font-family: var(--font-label);
+      font-size: 11px;
+    }
+    .nf__controls {
+      display: flex;
+      gap: 4px;
+    }
+    .nf__btn {
+      width: 22px;
+      height: 20px;
+      background: var(--grey-1);
+      border: 2px solid;
+      border-color: var(--bevel-raised);
+      font-family: var(--font-label);
+      font-size: 9px;
+      color: var(--ink);
+      display: grid;
+      place-items: center;
+    }
+    .nf__body {
+      padding: 32px 28px 36px;
+      font-family: var(--font-os);
+    }
+    .nf__code {
+      margin: 0;
+      font-family: var(--font-label);
+      font-size: 44px;
+      color: var(--red);
+    }
+    .nf__msg {
+      margin: 14px 0 0;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .nf__hint {
+      margin: 6px 0 0;
+      font-size: 13.5px;
+      color: var(--grey-3);
+    }
+    .nf__actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .nf__link {
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+  </style>
+</BaseLayout>

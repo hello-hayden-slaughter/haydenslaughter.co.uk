@@ -1,0 +1,70 @@
+# Hayden Slaughter — product builder and leader. Brighton, UK.
+
+> I build products. I build teams. I live in the zero-to-one mess and turn it
+> into something people love. AI-native is how I build today.
+
+This is the canonical, authored summary for any AI reading the site. It is
+faithful compression, not puffery, and it never overclaims relative to the full
+detail on the site. The anti-fit is included on purpose so the assessment is
+trustworthy.
+
+## What that means
+
+I turn ambiguity into a product people love, and a team that owns it. Wherever
+the way forward is unclear and a product is yet to take shape, a new venture, a
+new team, or a new bet inside a bigger company, I build the product, the team
+and the direction. I have done it more than once, in different companies and
+situations, each time entering through a design-shaped door and growing into the
+product leadership the moment needed.
+
+## The proof, twice over
+
+- Powernaut (current, early-stage energy software, ~12 people). First product
+  hire; the role did not exist. Came in on a three-day-a-week UX contract and
+  within a month was running the product function and advising a business pivot.
+  Made the first product call (focus the stretched team on the customers who
+  were actually winning), ran a 26-interview research programme across nine
+  countries in five weeks against an investor deadline, led the company strategy
+  the investors backed, and built the product strategy and operating model
+  underneath it. A customer described what shipped as "something we've not had
+  before".
+
+- Indra Renewable Technologies (EV charging scale-up, 2021 to 2024). Arrived as
+  a contract designer on a three-week brief; left three and a half years later
+  running everything customer-facing, reporting to the founder, with a product
+  function, research practice and team of seven built from nothing. Took the
+  customer app from a low two-star launch to 4.2 and number-one-rated in its UK
+  class. Found that the company's own installers were quietly selling against
+  it, proved it was costing sales, and built an installer app that cut
+  commissioning from hours to minutes (4.6 stars) and carried a quarterly
+  target. Got a hardware company to redesign its physical product off the team's
+  research. Built the software and research behind the world's largest
+  vehicle-to-home trial (200+ homes, publicly documented). Held the team steady
+  through an acquisition.
+
+## AI-native, with depth, not just usage
+
+I build with AI daily and have shipped two very different AI products solo, both
+public. Olive, a premium native iOS cooking app with a cost-first
+on-device/cloud architecture and guardrails that make it structurally impossible
+for the model to emit a wrong measurement. Pip, a local-first Mac AI assistant
+that thinks with you, not for you, a genuine MCP client built from scratch,
+model-agnostic by architecture. AI is a tool to me, not an identity. Axure, then
+Sketch, then Figma, now AI. The approach endures.
+
+## Where I do my best work
+
+Wherever it is fast, ambiguous, and there is room to build. A new venture, a new
+team, or a new bet inside a bigger company. Zero-to-one product leadership.
+AI-native product roles.
+
+## Where I am not the fit
+
+Slow, low-ambiguity, permission-heavy environments, whatever the company size.
+People-management tracks for their own sake. I lead, and sometimes manage, but
+management is not the ambition. I would rather say so up front than waste
+anyone's time.
+
+## Contact
+
+hello@haydenslaughter.co.uk · https://haydenslaughter.co.uk
