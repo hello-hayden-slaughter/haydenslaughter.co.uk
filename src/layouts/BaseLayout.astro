@@ -1,0 +1,65 @@
+---
+// Self-hosted webfonts (Fontsource) — no external font requests.
+import '@fontsource/silkscreen/400.css';
+import '@fontsource/silkscreen/700.css';
+import '@fontsource-variable/space-grotesk/wght.css';
+import '@fontsource-variable/archivo/wght.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '@fontsource/ibm-plex-mono/600.css';
+
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Path (relative to site root) or absolute URL for the Open Graph image. */
+  ogImage?: string;
+  /** Set true to keep a page out of search indexes. */
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = 'Portfolio of Hayden Slaughter — a zero-to-one product builder in Brighton who turns the early-stage mess into products people love.',
+  ogImage,
+  noindex = false,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#1e7a72" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Slaughter OS" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

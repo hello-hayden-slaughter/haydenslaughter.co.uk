@@ -1,0 +1,98 @@
+/*
+ * Slaughter OS — design tokens
+ * Ported from the Claude Design "Slaughter OS" system (tokens/*.css).
+ * Font families adjusted for the self-hosted Fontsource variable faces.
+ */
+:root {
+  /* ── Colour: core ─────────────────────────────────────── */
+  --ink: #16130e; /* text, borders, dark panels */
+  --teal: #1e7a72; /* primary brand, links, rules */
+  --paper: #fffdf0; /* document surface */
+  --canvas: #e7e2d6; /* behind the sheet */
+
+  /* Colour: functional accents — one per moment, never all at once */
+  --mint: #7ce3a8; /* wins, metrics */
+  --yellow: #e8c463; /* highlight */
+  --red: #b8261c; /* tags, alert */
+  --navy: #24246b; /* secondary, window title bars */
+
+  /* Colour: greys */
+  --grey-1: #c9c4bb; /* rules, OS chrome */
+  --grey-2: #8a857b; /* faint text, meta */
+  --grey-3: #43403a; /* muted body */
+  --grey-4: #4a463e; /* chrome bevel dark */
+  --white: #ffffff; /* OS-register surfaces only */
+
+  /* Colour: semantic aliases */
+  --text-body: var(--ink);
+  --text-muted: var(--grey-3);
+  --text-faint: var(--grey-2);
+  --text-inverse: var(--paper);
+  --surface-page: var(--canvas);
+  --surface-card: var(--paper);
+  --surface-inverse: var(--ink);
+  --link: var(--teal);
+  --link-hover: var(--red);
+  --selection-bg: var(--navy);
+  --selection-fg: var(--paper);
+
+  /* ── Typography: families ─────────────────────────────── */
+  /* headlines & titles, 700, tight tracking */
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', sans-serif;
+  /* eyebrows, section numbers, tags — never body */
+  --font-label: 'Silkscreen', monospace;
+  /* reading face, 400/500/600 */
+  --font-body: 'Archivo Variable', 'Archivo', sans-serif;
+  /* chips, dates, code-y details */
+  --font-mono: 'IBM Plex Mono', monospace;
+  /* OS register (site windows) body text */
+  --font-os: Verdana, Geneva, sans-serif;
+
+  /* Typography: scale */
+  --text-h1: 40px;
+  --text-h2: 28px;
+  --text-h3: 20px;
+  --text-body-size: 16px;
+  --text-small: 13px;
+  --text-meta: 11px;
+  --text-label: 10px;
+
+  /* Typography: details */
+  --tracking-display: -0.03em;
+  --tracking-label: 0.14em;
+  --leading-body: 1.6;
+  --leading-display: 0.98;
+
+  /* ── Spacing: 8px grid ────────────────────────────────── */
+  --space-1: 8px; /* tight */
+  --space-2: 16px; /* default gap */
+  --space-3: 24px; /* block padding */
+  --space-5: 40px; /* section */
+  --space-7: 56px; /* major break */
+  --measure-body: 66ch;
+  --page-max: 1000px;
+
+  /* ── Construction: 2px border, hard shadow, square corners */
+  --border-w: 2px;
+  --border: 2px solid var(--ink);
+  --border-thin: 1.5px solid var(--ink);
+  --shadow-hard: 4px 4px 0 rgba(22, 19, 14, 0.85); /* cards, small objects */
+  --shadow-hard-sm: 3px 3px 0 rgba(22, 19, 14, 0.85); /* buttons */
+  --shadow-hard-lg: 10px 10px 0 rgba(22, 19, 14, 0.35); /* big panels */
+  --shadow-os: 6px 6px 0 rgba(0, 0, 0, 0.4); /* OS windows */
+  --radius-doc: 0; /* documents: square, always */
+  --radius-app: 5px; /* "app" objects only — icons, live UI, never documents */
+  --rule-dotted: 1px dotted var(--grey-1);
+
+  /* OS chrome bevel (site register) — border-color shorthands */
+  --bevel-raised: #ffffff #4a463e #4a463e #ffffff;
+  --bevel-sunken: #4a463e #ffffff #ffffff #4a463e;
+
+  /* ── Z-index scale (OS layer) ─────────────────────────── */
+  --z-desktop: 0;
+  --z-window: 100;
+  --z-window-focused: 200;
+  --z-taskbar: 900;
+  --z-menu: 1000;
+  --z-statusbar: 1100;
+}

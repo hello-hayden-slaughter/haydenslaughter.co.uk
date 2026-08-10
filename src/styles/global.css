@@ -1,0 +1,138 @@
+/*
+ * Slaughter OS — global styles
+ * Default is Register B ("being read"): the document/plain-page voice.
+ * The OS desktop (Register A) opts in via its own scoped styles.
+ */
+@import './tokens.css';
+
+/* ── Reset ──────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  line-height: var(--leading-body);
+  color: var(--text-body);
+  background: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+picture,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* ── Headings & display type ────────────────────────────── */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-h1);
+}
+h2 {
+  font-size: var(--text-h2);
+}
+h3 {
+  font-size: var(--text-h3);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* ── Links ──────────────────────────────────────────────── */
+a {
+  color: var(--link);
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+/* ── Selection ──────────────────────────────────────────── */
+::selection {
+  background: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+/* ── Focus ──────────────────────────────────────────────── */
+:focus-visible {
+  outline: var(--border-w) solid var(--teal);
+  outline-offset: 2px;
+}
+
+/* ── Building blocks (document register) ────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--space-3);
+}
+
+.measure {
+  max-width: var(--measure-body);
+}
+
+/* Silkscreen eyebrow / label — labels only, never body copy */
+.eyebrow {
+  font-family: var(--font-label);
+  font-size: var(--text-label);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+/* Dotted rule matching the design's separators */
+.rule {
+  border: none;
+  border-top: var(--rule-dotted);
+}
+
+/* ── Reduced motion ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
