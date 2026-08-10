@@ -1,24 +1,161 @@
 /** @jsxImportSource preact */
 import type { ComponentChildren } from 'preact';
+import { intro, howIWork, journey, fit, builtWithAI, site } from '../../data/site';
+import { cv } from '../../data/cv';
+import { caseStudies } from '../../data/caseStudies';
 
 export interface AppDef {
   id: string;
-  /** Window title-bar label. */
   title: string;
-  /** Desktop-icon label (defaults to title). */
   iconLabel?: string;
   section: 'DOCUMENTS' | 'SHIPPED WORK' | 'ELSEWHERE' | 'GAMES';
-  /** Accent colour for the (placeholder) desktop icon tile. */
   color: string;
-  /** Optional rounded icon (apps rather than documents). */
   rounded?: boolean;
-  /** Cascade spawn rect (from the design's CASCADE map). */
   rect: { x: number; y: number; w: number; h: number };
-  /** mailto/href apps open a link instead of a window. */
   href?: string;
   menus?: string[];
   content?: ComponentChildren;
 }
+
+const eyebrow = (text: string) => (
+  <p style="margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--red)">
+    {text}
+  </p>
+);
+
+const CvWindow = () => (
+  <div>
+    {eyebrow(cv.kicker)}
+    <h1 style="margin:0 0 4px;font-size:22px;line-height:1.15;font-weight:700;font-family:var(--font-os)">
+      {cv.name}
+    </h1>
+    <p style="margin:0 0 14px;font-size:12px;color:var(--grey-3)">
+      {cv.contact.location} · <a href={`mailto:${cv.contact.email}`}>{cv.contact.email}</a> ·{' '}
+      <a href={cv.contact.linkedin.href} target="_blank" rel="noopener">
+        LinkedIn
+      </a>
+    </p>
+    <p style="margin:0 0 18px;font-size:13.5px;line-height:1.7">{cv.summary}</p>
+    {cv.experience.map((role) => (
+      <div style="margin:0 0 16px">
+        <p style="margin:0;font-size:14px;font-weight:700">
+          {role.role}
+          {role.org ? ` · ${role.org}` : ''}{' '}
+          <span style="font-weight:400;color:var(--grey-2)">· {role.period}</span>
+        </p>
+        {role.blurb && (
+          <p style="margin:6px 0 0;font-size:13px;line-height:1.6">{role.blurb}</p>
+        )}
+        {role.bullets && (
+          <ul style="margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.6;color:var(--grey-4)">
+            {role.bullets.map((b) => (
+              <li>{b}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+    ))}
+    <p style="margin:18px 0 6px;font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--grey-2)">
+      SKILLS
+    </p>
+    <p style="margin:0 0 14px;font-size:12.5px;line-height:1.8">{cv.skills.join(' · ')}</p>
+    <p style="margin:0;font-size:12.5px;line-height:1.6">
+      <strong>Education.</strong> {cv.education.map((e) => `${e.degree}, ${e.place}`).join('. ')}.
+    </p>
+    <p style="margin:10px 0 0;font-size:12.5px;line-height:1.6">
+      <strong>Outside work.</strong> {cv.outsideWork}
+    </p>
+  </div>
+);
+
+const WorkWindow = () => (
+  <div>
+    {eyebrow('C:\\THE WORK — 2 ITEMS')}
+    <p style="margin:0 0 16px;font-size:13.5px;line-height:1.7">
+      Two places I walked into something unshaped and left it clearer, more useful, and owned by the
+      team. Open the full story in its own document.
+    </p>
+    {caseStudies.map((cs) => (
+      <div style="margin:0 0 14px;border:2px solid var(--ink);padding:14px 16px;box-shadow:3px 3px 0 rgba(22,19,14,0.85)">
+        <p style="margin:0;font-size:15px;font-weight:700">{cs.name}</p>
+        <p style="margin:2px 0 0;font-size:11px;color:var(--grey-2)">
+          {cs.kind} · {cs.period}
+        </p>
+        <p style="margin:8px 0 0;font-size:12.5px;line-height:1.6;color:var(--grey-4)">
+          {cs.summary}
+        </p>
+        <p style="margin:10px 0 0;font-size:11px;color:var(--grey-3)">{cs.tags.join(' · ')}</p>
+        <p style="margin:10px 0 0">
+          <a href={`/work/${cs.slug}`} style="font-size:12.5px;font-weight:700">
+            Read the full story →
+          </a>
+        </p>
+      </div>
+    ))}
+  </div>
+);
+
+const ShippedWindow = () => (
+  <div>
+    {eyebrow('BUILT WITH AI')}
+    <p style="margin:0 0 16px;font-size:13.5px;line-height:1.7;font-weight:700">
+      {builtWithAI.lead}
+    </p>
+    {builtWithAI.products.map((p) => (
+      <div style="margin:0 0 14px">
+        <p style="margin:0;font-size:14px;font-weight:700">
+          {p.name} <span style="font-weight:400;color:var(--grey-2)">· {p.kind}</span>
+        </p>
+        <p style="margin:6px 0 0;font-size:13px;line-height:1.65">{p.body}</p>
+      </div>
+    ))}
+  </div>
+);
+
+const AboutWindow = () => (
+  <div>
+    {eyebrow('PRODUCT BUILDER · AI-NATIVE · BRIGHTON')}
+    <h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;font-weight:700;font-family:var(--font-os)">
+      I build products and teams and turn the zero-to-one mess into things people love.
+    </h1>
+    {intro.map((p) => (
+      <p style="margin:0 0 14px;font-size:13.5px;line-height:1.75">{p}</p>
+    ))}
+    <p style="margin:0;font-size:13px">
+      <a href="/cv">Open the CV →</a> &nbsp; <a href="/work">See the work →</a>
+    </p>
+  </div>
+);
+
+const HowWindow = () => (
+  <div>
+    {eyebrow('OPERATING PRINCIPLE')}
+    <h1 style="margin:0 0 14px;font-size:20px;line-height:1.3;font-weight:700;font-family:var(--font-os)">
+      {howIWork.statement}
+    </h1>
+    <p style="margin:0 0 16px;font-size:13.5px;line-height:1.7">{howIWork.detail}</p>
+    <ul style="margin:0;padding-left:18px;font-size:13px;line-height:1.8">
+      {howIWork.scales.map((s) => (
+        <li>{s}</li>
+      ))}
+    </ul>
+  </div>
+);
+
+const FitJourneyWindow = () => (
+  <div>
+    {eyebrow('FIT, HONESTLY')}
+    {fit.map((p) => (
+      <p style="margin:0 0 12px;font-size:13.5px;line-height:1.7">{p}</p>
+    ))}
+    <hr style="border:none;border-top:1px dotted var(--grey-2);margin:16px 0" />
+    {eyebrow('THE JOURNEY')}
+    <p style="margin:0;font-size:13px;line-height:1.7;color:var(--grey-4)">{journey}</p>
+    <p style="margin:14px 0 0;font-size:13px">
+      <a href={site.links.email}>Say hello →</a>
+    </p>
+  </div>
+);
 
 // Cascade positions + window list ported from the design script (CASCADE/TITLES).
 export const APPS: AppDef[] = [
@@ -28,18 +165,17 @@ export const APPS: AppDef[] = [
     iconLabel: 'WELCOME',
     section: 'DOCUMENTS',
     color: 'var(--yellow)',
-    rect: { x: 430, y: 100, w: 470, h: 300 },
+    rect: { x: 430, y: 100, w: 470, h: 320 },
     content: (
       <>
-        <p style="margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--red)">
-          YOU'VE LANDED ON SLAUGHTER OS
-        </p>
+        {eyebrow("YOU'VE LANDED ON SLAUGHTER OS")}
         <p style="margin:0 0 12px;font-size:13.5px;line-height:1.7">
           This is a portfolio that behaves like a desktop. <strong>Click any icon</strong> to open
           it, drag windows by their title bars, resize them from the bottom-right corner.
         </p>
         <p style="margin:0;font-size:13.5px;line-height:1.7">
-          In a hurry? <strong>NORMAL.CV</strong> is the plain version. No desktop required.
+          In a hurry? <strong>NORMAL.CV</strong> is the plain version, or{' '}
+          <a href="/">the plain site</a> has it all without the desktop.
         </p>
       </>
     ),
@@ -51,31 +187,7 @@ export const APPS: AppDef[] = [
     section: 'DOCUMENTS',
     color: 'var(--paper)',
     rect: { x: 150, y: 60, w: 560, h: 470 },
-    content: (
-      <>
-        <p style="margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--red)">
-          PRODUCT BUILDER · AI-NATIVE · BRIGHTON
-        </p>
-        <h1 style="margin:0 0 16px;font-size:24px;line-height:1.3;font-weight:700;font-family:var(--font-os)">
-          I build products and teams and turn the zero-to-one mess into things people love.
-        </h1>
-        <p style="margin:0 0 16px;font-size:13.5px;line-height:1.7;color:var(--grey-4)">
-          A zero-to-one specialist who came up through design and front-end, building AI-native
-          today.
-        </p>
-        <hr style="border:none;border-top:1px dotted var(--grey-2);margin:14px 0" />
-        <p style="margin:0 0 12px;font-size:13.5px;line-height:1.75">
-          I build products, and the teams that build them. I do my best work in the early stages,
-          when it's unclear, unshaped, and we're building from scratch. I take that ambiguity and
-          turn it into something real, a product people love, and a team that owns where it's going.
-        </p>
-        <p style="margin:0;font-size:13.5px;line-height:1.75">
-          I learnt my craft through UX design, grew into product, and these days build AI-native.
-          It's the most alive and energised I've felt about work in years. The tools change often,
-          but the collaborative and open way I work doesn't.
-        </p>
-      </>
-    ),
+    content: <AboutWindow />,
   },
   {
     id: 'cv',
@@ -83,101 +195,25 @@ export const APPS: AppDef[] = [
     iconLabel: 'NORMAL.CV',
     section: 'DOCUMENTS',
     color: 'var(--white)',
-    rect: { x: 240, y: 40, w: 660, h: 620 },
-    content: (
-      <div style="font-family:Helvetica,'Helvetica Neue',sans-serif;color:#222">
-        <h2 style="margin:0 0 2px;font-size:22px;font-weight:700;letter-spacing:-0.01em;font-family:inherit">
-          Hayden Slaughter
-        </h2>
-        <p style="margin:0 0 4px;font-size:13px;color:#444">
-          Product Builder · AI-native · Brighton, UK
-        </p>
-        <p style="margin:0 0 20px;font-size:12px;color:#666">
-          hello@haydenslaughter.co.uk
-        </p>
-        <p style="margin:0 0 22px;font-size:13px;line-height:1.6">
-          Zero-to-one product specialist. I take ambiguous early-stage problems and turn them into
-          shipped products and teams that own where they're going. Came up through UX design and
-          front-end; build AI-native today.
-        </p>
-        <p style="margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#999">
-          EXPERIENCE
-        </p>
-        <div style="margin-bottom:16px">
-          <p style="margin:0 0 2px;font-size:13.5px;font-weight:700">
-            First Product Hire — early-stage energy software{' '}
-            <span style="font-weight:400;color:#888">· current</span>
-          </p>
-          <ul style="margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.65;color:#333">
-            <li>Defined the product role from scratch; wrote the strategy the company now runs on.</li>
-            <li>
-              Ran 26 customer interviews across 9 countries in 5 weeks against an investor deadline;
-              killed my own market bet when the evidence said so.
-            </li>
-            <li>Built the team's operating model and an AI-driven design system.</li>
-          </ul>
-        </div>
-        <div style="margin-bottom:16px">
-          <p style="margin:0 0 2px;font-size:13.5px;font-weight:700">
-            Product Lead — Indra (EV charging){' '}
-            <span style="font-weight:400;color:#888">· 3 years</span>
-          </p>
-          <ul style="margin:6px 0 0;padding-left:18px;font-size:12.5px;line-height:1.65;color:#333">
-            <li>
-              Joined on a three-week design contract; ended up running everything customer-facing
-              and building the product function.
-            </li>
-            <li>
-              Traced declining sales to installer pain; redesigned commissioning from hours to
-              minutes, turning installers from critics to advocates.
-            </li>
-            <li>
-              Took the customer app from two stars to 4.2 and #1 in the UK; built the software
-              behind the world's largest vehicle-to-home trial (200+ homes).
-            </li>
-          </ul>
-        </div>
-        <p style="margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:0.1em;color:#999">
-          INDEPENDENT PRODUCTS
-        </p>
-        <p style="margin:0 0 6px;font-size:12.5px;line-height:1.6">
-          <strong>Olive</strong> — iOS app that turns cookbook pages, screenshots and reels into
-          clean recipes. Designed and built solo, entirely with AI. On TestFlight.
-        </p>
-        <p style="margin:0;font-size:12.5px;line-height:1.6">
-          <strong>Pip</strong> — desktop AI assistant that thinks with you, not for you.
-          Model-agnostic, local-first, custom MCP client. Built solo.
-        </p>
-      </div>
-    ),
+    menus: ['FILE', 'HELP'],
+    rect: { x: 240, y: 40, w: 660, h: 640 },
+    content: <CvWindow />,
   },
   {
     id: 'how',
     title: 'HOW I WORK',
     section: 'DOCUMENTS',
     color: 'var(--paper)',
-    rect: { x: 300, y: 90, w: 560, h: 560 },
-    content: (
-      <>
-        <p style="margin:0 0 10px;font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--red)">
-          OPERATING PRINCIPLES
-        </p>
-        <p style="margin:0 0 12px;font-size:13.5px;line-height:1.7">
-          Start with the sharpest version of the problem, in the open, with the team. Build the
-          smallest real thing that tests the biggest risk. Kill bets fast when the evidence says so.
-        </p>
-        <p style="margin:0;font-size:13.5px;line-height:1.7">
-          More detail arrives here soon.
-        </p>
-      </>
-    ),
+    rect: { x: 300, y: 90, w: 520, h: 420 },
+    content: <HowWindow />,
   },
   {
     id: 'journey',
     title: 'JOURNEY.LOG',
     section: 'DOCUMENTS',
     color: 'var(--paper)',
-    rect: { x: 420, y: 170, w: 480, h: 260 },
+    rect: { x: 420, y: 120, w: 560, h: 460 },
+    content: <FitJourneyWindow />,
   },
   {
     id: 'work',
@@ -185,14 +221,16 @@ export const APPS: AppDef[] = [
     iconLabel: 'THE WORK',
     section: 'SHIPPED WORK',
     color: 'var(--yellow)',
-    rect: { x: 830, y: 90, w: 500, h: 220 },
+    rect: { x: 300, y: 70, w: 560, h: 560 },
+    content: <WorkWindow />,
   },
   {
     id: 'ai',
     title: 'SHIPPED.EXE',
     section: 'SHIPPED WORK',
     color: 'var(--red)',
-    rect: { x: 440, y: 60, w: 520, h: 560 },
+    rect: { x: 440, y: 60, w: 520, h: 500 },
+    content: <ShippedWindow />,
   },
   {
     id: 'olive',
@@ -200,7 +238,16 @@ export const APPS: AppDef[] = [
     section: 'SHIPPED WORK',
     color: 'var(--mint)',
     rounded: true,
-    rect: { x: 540, y: 15, w: 390, h: 760 },
+    rect: { x: 540, y: 40, w: 420, h: 300 },
+    content: (
+      <>
+        {eyebrow('OLIVE · LIVE ON TESTFLIGHT')}
+        <p style="margin:0;font-size:13.5px;line-height:1.7">{builtWithAI.products[0].body}</p>
+        <p style="margin:14px 0 0;font-size:12.5px;color:var(--grey-2)">
+          The full Olive story is coming to this desktop soon.
+        </p>
+      </>
+    ),
   },
   {
     id: 'pip',
@@ -208,7 +255,16 @@ export const APPS: AppDef[] = [
     section: 'SHIPPED WORK',
     color: 'var(--ink)',
     rounded: true,
-    rect: { x: 300, y: 90, w: 720, h: 480 },
+    rect: { x: 300, y: 90, w: 460, h: 320 },
+    content: (
+      <>
+        {eyebrow('PIP · LIVE')}
+        <p style="margin:0;font-size:13.5px;line-height:1.7">{builtWithAI.products[1].body}</p>
+        <p style="margin:14px 0 0;font-size:12.5px;color:var(--grey-2)">
+          The full Pip story is coming to this desktop soon.
+        </p>
+      </>
+    ),
   },
   {
     id: 'browser',
