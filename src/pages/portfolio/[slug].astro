@@ -606,6 +606,15 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
       .depth__grid {
         grid-template-columns: 1fr;
       }
+      /* Drop the hanging-number indent — number sits inline above the title */
+      .beat {
+        padding-left: 0;
+      }
+      .beat__n {
+        position: static;
+        display: block;
+        margin-bottom: 8px;
+      }
     }
   </style>
 </BaseLayout>
