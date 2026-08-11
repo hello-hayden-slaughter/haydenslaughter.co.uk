@@ -43,7 +43,9 @@ export const cv = {
     },
     {
       period: 'Jan 2025 – Dec 2025',
-      meta: ['Documented at instagram.com/oldflintcottage'],
+      meta: [
+        'Documented at <a href="https://www.instagram.com/oldflintcottage/" target="_blank" rel="noopener">instagram.com/oldflintcottage</a>',
+      ],
       role: 'Career break',
       org: 'Rebuilding a 300-year-old cottage',
       blurb:
@@ -84,12 +86,17 @@ export const cv = {
       status: 'LIVE ON TESTFLIGHT',
       kind: 'Premium iOS cooking app',
       body: "Plans the week's meals around your taste and diet, writes the shopping list and walks you through the cooking. Built solo, entirely with AI. Quantities always come from structured data, never the model, so it can never put a wrong measurement in a recipe.",
+      links: [
+        { label: 'Download the app', href: 'https://testflight.apple.com/join/vHCJyBfA' },
+        { label: 'Visit the website', href: 'https://olivecooking.co.uk/' },
+      ],
     },
     {
       name: 'Pip',
       status: 'LIVE',
       kind: 'Local-first Mac AI assistant',
       body: 'Thinks with you, not for you. A genuine MCP client built from scratch, model-agnostic by architecture, with cost-aware routing and agentic guardrails. Its documentation system keeps a stateless AI agent coherent across sessions.',
+      links: [{ label: 'Visit hellopip.co.uk', href: 'https://hellopip.co.uk/' }],
     },
   ],
 

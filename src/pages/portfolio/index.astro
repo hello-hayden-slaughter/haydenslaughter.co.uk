@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteNav from '../../components/SiteNav.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { caseStudies } from '../../data/caseStudies';
+import pnHero from '../../diagrams/powernaut/hero.html?raw';
 ---
 
 <BaseLayout
@@ -29,9 +30,7 @@ import { caseStudies } from '../../data/caseStudies';
                 <img src={cs.cardImage} alt={cs.hero?.alt ?? cs.name} loading="lazy" />
               </div>
             ) : (
-              <div class="pcard__media pcard__media--mark">
-                <span>{cs.name}</span>
-              </div>
+              <div class="pcard__media pcard__media--diagram" set:html={pnHero} />
             )}
             <div class="pcard__body">
               <div class="pcard__top">
@@ -113,16 +112,26 @@ import { caseStudies } from '../../data/caseStudies';
       height: 100%;
       object-fit: cover;
     }
-    .pcard__media--mark {
+    .pcard__media--diagram {
       display: grid;
       place-items: center;
       background: var(--teal);
+      padding: 18px;
     }
-    .pcard__media--mark span {
-      font-family: var(--font-label);
-      font-size: 20px;
-      color: rgba(255, 255, 255, 0.9);
-      letter-spacing: 0.08em;
+    .pcard__media--diagram :global(div) {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      width: auto !important;
+      max-width: 100%;
+    }
+    .pcard__media--diagram :global(svg) {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      display: block;
     }
     .pcard__body {
       padding: 24px 24px 26px;

@@ -39,8 +39,11 @@ export interface Beat {
   body: string[];
   figures?: Figure[];
   quote?: Quote;
+  /** Mint stat bar segments, e.g. ["4.6 stars", "hours to minutes", "critics to advocates"]. */
+  stat?: string[];
 }
 export interface DepthItem {
+  title: string;
   body: string;
   /** Optional 4:3 cover image, rendered as a card with the text below. */
   image?: Img;
@@ -162,6 +165,7 @@ const indra: CaseStudy = {
           caption: `On the road and on site. Real jobs, real installers, and the research that reshaped the product.`,
         },
       ],
+      stat: ['4.6 stars, installer app', 'hours to minutes to commission', 'fitters from critics to advocates'],
     },
     {
       title: 'The best-rated app in the UK',
@@ -221,18 +225,22 @@ const indra: CaseStudy = {
   depthHeading: 'More of what I built at Indra',
   depth: [
     {
-      body: `DynaMO, the operations platform the fleet ran on. The tool the whole business ran on, support agents and installers alike, rebuilt around how those people actually worked and around customers who increasingly wanted to help themselves. Page loads went from 58 seconds to 1, a core search from around 5 seconds to under 1, with full test coverage on the critical path. It scaled to a fleet of more than 130,000 commissioned chargers.`,
+      title: 'The operations platform',
+      body: `The tool the whole business ran on, support agents and installers alike, rebuilt around how those people actually worked and around customers who increasingly wanted to help themselves. Page loads went from 58 seconds to 1, a core search from around 5 seconds to under 1, with full test coverage on the critical path. It scaled to a fleet of more than 130,000 commissioned chargers.`,
       image: img('indra-13.jpg', 'DynaMO, the operations platform'),
     },
     {
-      body: `Bidirectional charging, the world's largest vehicle-to-home trial. I built and ran the software and the research behind it, a cohort of committed early adopters using their car as a home battery, powering the house at peak times and recharging when energy is cheaper and greener. The vision was the founder's. The software that ran it was mine. Publicly documented by Indra, 200+ bidirectional chargers in UK homes.`,
+      title: "The world's largest vehicle-to-home trial",
+      body: `I built and ran the software and the research behind it, a cohort of committed early adopters using their car as a home battery, powering the house at peak times and recharging when energy is cheaper and greener. The vision was the founder's. The software that ran it was mine. Publicly documented by Indra, 200+ bidirectional chargers in UK homes.`,
       image: img('indra-14.jpg', "Bidirectional charging at the industry's biggest show"),
     },
     {
-      body: `The platform migration. I co-ran moving thousands of customers off the third-party platform we had been renting onto our own, and made it scale and hold.`,
+      title: 'The platform migration',
+      body: `I co-ran moving thousands of customers off the third-party platform we had been renting onto our own, and made it scale and hold.`,
     },
     {
-      body: `The charger's status lights. A new charger arrived with a ring of lights that mostly existed because a competitor had one. The team fondly called it unicorn vomit. I turned it into a language, a standard set of light sequences that tell you what the charger is actually doing, animated properly and signed off across the business, built inside real firmware constraints.`,
+      title: "The charger's status lights",
+      body: `A new charger arrived with a ring of lights that mostly existed because a competitor had one. The team fondly called it unicorn vomit. I turned it into a language, a standard set of light sequences that tell you what the charger is actually doing, animated properly and signed off across the business, built inside real firmware constraints.`,
     },
   ],
 };
@@ -313,15 +321,19 @@ const powernaut: CaseStudy = {
   depthHeading: 'More of what I built at Powernaut',
   depth: [
     {
+      title: 'How the team decides and ships.',
       body: `None of it existed when I arrived, and it runs on one idea. Hand the team the problem, not the solution. Work starts from a short problem brief, and if the brief is long I have smuggled a solution into it. Product, engineering and delivery run as one team, and the bar at the far end is firm. Done means adopted, not deployed.`,
     },
     {
+      title: 'An AI-woven way of working.',
       body: `AI runs through the day-to-day, the research, the design work and the routine operational load, so a small team moves like a bigger one. It is the medium I build in now, and the most energised I have felt about work in years.`,
     },
     {
+      title: 'The AI-native design system.',
       body: `Design capacity was one external designer, about a day a week, and when we could not keep her I was not willing to lose the quality she brought. The design system is the answer, a single source of truth in the codebase with guardrails that keep AI-produced work on brand. It is why a team this size ships a coherent, considered product at the pace it does.`,
     },
     {
+      title: 'AI inside the product.',
       body: `Most teams only answer the first AI question, how the team uses it to work. I owned the second, how it operates inside the platform. Customer first, visible, real product impact, and no slop, with agents inside the workflows rather than a chat bolted on top. The clearest bet was exposing the platform through an MCP server so agents can work directly against it. A light-touch build, but the pull from customers and the team was out of all proportion to its size.`,
     },
   ],

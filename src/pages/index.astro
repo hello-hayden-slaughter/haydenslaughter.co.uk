@@ -40,7 +40,7 @@ import { cv } from '../data/cv';
                 <div class="role__meta">
                   <span class="role__period">{role.period}</span>
                   {role.meta.map((m) => (
-                    <span class="role__metaline">{m}</span>
+                    <span class="role__metaline" set:html={m} />
                   ))}
                 </div>
                 <div class="role__main">
@@ -80,6 +80,17 @@ import { cv } from '../data/cv';
                 </div>
                 <p class="ai-card__kind">{p.kind}</p>
                 <p class="ai-card__body">{p.body}</p>
+                {
+                  p.links && (
+                    <div class="ai-card__links">
+                      {p.links.map((l) => (
+                        <a href={l.href} target="_blank" rel="noopener">
+                          {l.label} ↗
+                        </a>
+                      ))}
+                    </div>
+                  )
+                }
               </div>
             ))
           }
@@ -309,6 +320,32 @@ import { cv } from '../data/cv';
       font-size: 14px;
       line-height: 1.65;
       color: var(--grey-1);
+    }
+    .ai-card__links {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+    }
+    .ai-card__links a {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--mint);
+      text-decoration: none;
+      border-bottom: 1px solid var(--grey-4);
+      padding-bottom: 2px;
+    }
+    .ai-card__links a:hover {
+      color: var(--paper);
+      border-color: var(--paper);
+    }
+    .role__metaline :global(a) {
+      color: var(--teal);
+      text-decoration: none;
+      border-bottom: 1px solid var(--grey-1);
+    }
+    .role__metaline :global(a:hover) {
+      color: var(--red);
     }
 
     /* ── Skills / education ─────────────────────────────── */

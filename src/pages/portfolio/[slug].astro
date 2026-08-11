@@ -5,6 +5,7 @@ import SiteFooter from '../../components/SiteFooter.astro';
 import { caseStudies, type Figure, type Img } from '../../data/caseStudies';
 
 // Powernaut is diagram-led; its figures are inline SVG/HTML lifted from source.
+import pnHero from '../../diagrams/powernaut/hero.html?raw';
 import pnFig1 from '../../diagrams/powernaut/fig1.html?raw';
 import pnFig2 from '../../diagrams/powernaut/fig2.html?raw';
 import pnFig3 from '../../diagrams/powernaut/fig3.html?raw';
@@ -27,14 +28,9 @@ export function getStaticPaths() {
 }
 
 const { cs } = Astro.props;
-const diagramsFor = (idx: number): string[] =>
-  cs.slug === 'powernaut' ? (powernautDiagrams[idx] ?? []) : [];
-
-const cellStyle = (im: Img) =>
-  [im.bg ? `background:${im.bg}` : '', im.fit ? `object-fit:${im.fit}` : ''].filter(Boolean).join(';');
-
-const depthCards = cs.depth?.filter((d) => d.image) ?? [];
-const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
+const isPowernaut = cs.slug === 'powernaut';
+const diagramsFor = (idx: number): string[] => (isPowernaut ? (powernautDiagrams[idx] ?? []) : []);
+const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
 ---
 
 <BaseLayout title={`${cs.name} — Hayden Slaughter`} description={cs.oneLiner}>
@@ -42,28 +38,31 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
 
   <main>
     <header class="cs-head">
-      <div class="container">
+      <div class="doc">
         <p class="eyebrow"><a href="/portfolio" class="cs-back">← Portfolio</a></p>
         <p class="cs-kind">{cs.roleTitle} · {cs.name} · {cs.kind} · {cs.period}</p>
         <h1 class="cs-oneliner">{cs.oneLiner}</h1>
-        <p class="cs-standfirst measure">{cs.standfirst}</p>
+        <p class="cs-standfirst">{cs.standfirst}</p>
         <a class="dl" href="/Hayden-Slaughter-Portfolio.pdf" download>
           <span class="dl__icon">↓</span> Download portfolio (PDF)
         </a>
       </div>
     </header>
 
-    {
-      cs.hero && (
-        <div class="container cs-hero-wrap">
+    <div class="doc cs-body">
+      {
+        isPowernaut && (
+          <div class="pn-figure pn-hero" set:html={pnHero} />
+        )
+      }
+      {
+        cs.hero && (
           <div class="cs-hero">
-            <img src={cs.hero.src} alt={cs.hero.alt} />
+            <img src={cs.hero.src} alt={cs.hero.alt} loading="lazy" />
           </div>
-        </div>
-      )
-    }
+        )
+      }
 
-    <div class="container cs-body">
       <section class="whatibuilt">
         <p class="eyebrow">What I built</p>
         <ul>
@@ -81,7 +80,7 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
                 <p class="beat__subhead">{beat.subhead}</p>
               </div>
             </div>
-            <div class="beat__body measure">
+            <div class="beat__body">
               {beat.body.map((p) => (
                 <p>{p}</p>
               ))}
@@ -97,17 +96,11 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
 
             {beat.figures?.map((fig: Figure) => (
               <figure class="fig">
-                {fig.layout === 'band' && (
-                  <div class="fig__band">
-                    <img src={fig.imgs[0].src} alt={fig.imgs[0].alt} loading="lazy" decoding="async" />
-                  </div>
-                )}
-
                 {fig.layout === 'grid' && (
                   <div class="fig__grid" style={`--cols:${fig.cols ?? '1fr 1fr'}`}>
                     {fig.imgs.map((im) => (
                       <div class="fig__cell" style={im.bg ? `background:${im.bg}` : ''}>
-                        <img src={im.src} alt={im.alt} style={cellStyle(im)} loading="lazy" decoding="async" />
+                        <img src={im.src} alt={im.alt} style={imgStyle(im)} loading="lazy" decoding="async" />
                       </div>
                     ))}
                   </div>
@@ -115,9 +108,7 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
 
                 {fig.layout === 'frame' && (
                   <div class="fig__frame">
-                    <div class="fig__framepad">
-                      <img src={fig.imgs[0].src} alt={fig.imgs[0].alt} loading="lazy" decoding="async" />
-                    </div>
+                    <img src={fig.imgs[0].src} alt={fig.imgs[0].alt} loading="lazy" decoding="async" />
                   </div>
                 )}
 
@@ -138,7 +129,19 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
               </figure>
             ))}
 
-            {diagramsFor(i).map((d) => <div class="pn-figure" set:html={d} />)}
+            {beat.stat && (
+              <div class="statbar">
+                {beat.stat.map((s) => <span class="statbar__seg">{s}</span>)}
+              </div>
+            )}
+
+            {diagramsFor(i).length === 2 ? (
+              <div class="pn-grid">
+                {diagramsFor(i).map((d) => <div class="pn-figure" set:html={d} />)}
+              </div>
+            ) : (
+              diagramsFor(i).map((d) => <div class="pn-figure" set:html={d} />)
+            )}
           </section>
         ))
       }
@@ -147,25 +150,21 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
         cs.depth && cs.depth.length > 0 && (
           <section class="depth">
             <h2 class="depth__title">{cs.depthHeading}</h2>
-            {depthCards.length > 0 && (
-              <div class="depth__cards">
-                {depthCards.map((d) => (
-                  <div class="dcard">
+            <div class="depth__grid">
+              {cs.depth.map((d) => (
+                <article class="dcard">
+                  {d.image && (
                     <div class="dcard__img">
-                      <img src={d.image!.src} alt={d.image!.alt} loading="lazy" decoding="async" />
+                      <img src={d.image.src} alt={d.image.alt} loading="lazy" decoding="async" />
                     </div>
-                    <p class="dcard__body">{d.body}</p>
+                  )}
+                  <div class="dcard__body">
+                    <h3>{d.title}</h3>
+                    <p>{d.body}</p>
                   </div>
-                ))}
-              </div>
-            )}
-            {depthNotes.length > 0 && (
-              <div class="depth__notes">
-                {depthNotes.map((d) => (
-                  <p class="measure">{d.body}</p>
-                ))}
-              </div>
-            )}
+                </article>
+              ))}
+            </div>
           </section>
         )
       }
@@ -180,6 +179,15 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
   <SiteFooter />
 
   <style>
+    /* Unified document column (matches the PDF: text and images share one width) */
+    .doc {
+      width: 100%;
+      max-width: 792px;
+      margin-inline: auto;
+      padding-inline: 24px;
+      box-sizing: border-box;
+    }
+
     /* ── Header ─────────────────────────────────────────── */
     .cs-head {
       background: var(--ink);
@@ -200,14 +208,15 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
     .cs-oneliner {
       margin: 18px 0 0;
       color: var(--paper);
-      max-width: 22ch;
-      font-size: clamp(28px, 4.8vw, 46px);
+      max-width: 20ch;
+      font-size: clamp(30px, 5vw, 46px);
     }
     .cs-standfirst {
       margin: 20px 0 0;
       font-size: 17px;
-      line-height: 1.65;
+      line-height: 1.6;
       color: var(--grey-1);
+      max-width: 60ch;
     }
     .dl {
       display: inline-flex;
@@ -229,40 +238,34 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
       color: var(--ink);
     }
 
-    /* ── Hero band (cropped strip, like the source) ─────── */
-    .cs-hero-wrap {
-      margin-top: calc(var(--space-5) * -1);
+    /* ── Body ───────────────────────────────────────────── */
+    .cs-body {
+      padding-block: var(--space-5) var(--space-7);
     }
+
     .cs-hero {
+      margin-top: var(--space-3);
       border: var(--border);
       box-shadow: var(--shadow-hard);
       overflow: hidden;
-      aspect-ratio: 21 / 9;
       background: var(--canvas);
     }
     .cs-hero img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
       display: block;
+      max-height: 460px;
+      object-fit: cover;
     }
 
-    /* ── Body ───────────────────────────────────────────── */
-    .cs-body {
-      padding-block: var(--space-5) var(--space-5);
-    }
     .whatibuilt {
-      border: var(--border);
-      background: var(--surface-card);
-      box-shadow: var(--shadow-hard);
-      padding: 28px 30px;
+      margin-top: var(--space-5);
     }
     .whatibuilt ul {
       margin: 14px 0 0;
       padding: 0;
       list-style: none;
       display: grid;
-      gap: 10px;
+      gap: 12px;
     }
     .whatibuilt li {
       position: relative;
@@ -280,49 +283,52 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
       background: var(--teal);
     }
 
+    /* ── Beats ──────────────────────────────────────────── */
     .beat {
-      padding: var(--space-5) 0;
-      border-top: var(--rule-dotted);
-      margin-top: var(--space-5);
-    }
-    .beat:first-of-type {
-      border-top: none;
+      padding-top: var(--space-7);
     }
     .beat__head {
       display: flex;
-      gap: 20px;
+      gap: 18px;
       align-items: baseline;
       margin-bottom: var(--space-2);
     }
     .beat__n {
       font-family: var(--font-label);
-      font-size: 24px;
+      font-size: 20px;
       color: var(--teal);
       flex: none;
     }
     .beat__title {
       margin: 0;
-      font-size: clamp(24px, 3.5vw, 32px);
+      font-size: clamp(24px, 3.5vw, 30px);
     }
     .beat__subhead {
-      margin: 8px 0 0;
+      margin: 10px 0 0;
       font-size: 17px;
-      line-height: 1.5;
-      color: var(--grey-3);
+      line-height: 1.45;
+      color: var(--ink);
       font-weight: 600;
+    }
+    .beat__body {
+      margin-top: 16px;
     }
     .beat__body p {
       margin: 0 0 14px;
       font-size: 16px;
-      line-height: 1.7;
+      line-height: 1.75;
+    }
+    .beat__body p:last-child {
+      margin-bottom: 0;
     }
 
     /* ── Figures ────────────────────────────────────────── */
     .fig {
       margin: var(--space-3) 0 0;
     }
-    .fig figcaption {
-      margin-top: 10px;
+    .fig figcaption,
+    .pn-figure + figcaption {
+      margin-top: 12px;
       font-family: var(--font-mono);
       font-size: 12px;
       line-height: 1.5;
@@ -336,8 +342,8 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
       overflow: hidden;
       display: grid;
       grid-template-columns: var(--cols);
-      gap: 12px;
-      height: clamp(220px, 32vw, 360px);
+      gap: 18px;
+      height: clamp(220px, 40vw, 300px);
     }
     .fig__cell {
       overflow: hidden;
@@ -352,13 +358,10 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
     .fig__frame {
       border: var(--border);
       box-shadow: var(--shadow-hard);
-      background: var(--paper);
-    }
-    .fig__framepad {
-      padding: clamp(24px, 4vw, 48px);
       background: #f1ede2;
+      padding: clamp(20px, 4vw, 44px);
     }
-    .fig__framepad img {
+    .fig__frame img {
       width: 100%;
       display: block;
     }
@@ -380,20 +383,22 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
       height: 100%;
       object-fit: cover;
       display: block;
-      min-height: 220px;
+      min-height: 240px;
     }
     .fig__pqquote {
       margin: 0;
-      padding: clamp(24px, 3vw, 36px);
+      padding: clamp(22px, 3vw, 34px);
       display: flex;
       flex-direction: column;
       justify-content: center;
+      background: var(--ink);
+      color: var(--paper);
     }
     .fig__pqtext {
       margin: 0;
       font-family: var(--font-display);
       font-weight: 600;
-      font-size: clamp(20px, 2.4vw, 26px);
+      font-size: clamp(19px, 2.4vw, 24px);
       line-height: 1.3;
       letter-spacing: -0.01em;
     }
@@ -403,25 +408,34 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
       font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--grey-2);
+      color: var(--mint);
     }
     .fig__pqnote {
       margin: 10px 0 0;
       font-size: 13px;
-      color: var(--grey-3);
+      color: var(--grey-1);
     }
 
-    .fig__band {
+    /* ── Stat bar ───────────────────────────────────────── */
+    .statbar {
+      margin-top: var(--space-3);
       border: var(--border);
       box-shadow: var(--shadow-hard);
-      overflow: hidden;
-      aspect-ratio: 21 / 9;
+      background: var(--mint);
+      color: var(--ink);
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
     }
-    .fig__band img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    .statbar__seg {
+      padding: 18px 20px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 15px;
+      text-align: center;
+    }
+    .statbar__seg + .statbar__seg {
+      border-left: var(--border);
     }
 
     /* ── Pull-quote (standalone) ────────────────────────── */
@@ -429,7 +443,6 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
       margin: var(--space-3) 0 0;
       border-left: 4px solid var(--teal);
       padding: 6px 0 6px 20px;
-      max-width: 48ch;
     }
     .pull blockquote {
       margin: 0;
@@ -454,6 +467,9 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
     }
 
     /* ── Powernaut embedded diagrams ────────────────────── */
+    .pn-hero {
+      margin: var(--space-3) 0 0;
+    }
     .pn-figure {
       margin: var(--space-3) 0 0;
       max-width: 100%;
@@ -466,21 +482,29 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
       max-width: 100%;
       height: auto;
     }
+    .pn-grid {
+      margin: var(--space-3) 0 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+    .pn-grid .pn-figure {
+      margin: 0;
+    }
 
-    /* ── Depth ──────────────────────────────────────────── */
+    /* ── Depth (boxed cards) ────────────────────────────── */
     .depth {
-      padding: var(--space-5) 0 0;
-      border-top: var(--border);
-      margin-top: var(--space-5);
+      padding-top: var(--space-7);
     }
     .depth__title {
       margin: 0 0 var(--space-3);
-      font-size: 24px;
+      font-size: clamp(24px, 3.5vw, 30px);
     }
-    .depth__cards {
+    .depth__grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--space-2);
+      gap: 18px;
     }
     .dcard {
       border: var(--border);
@@ -501,21 +525,17 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
       display: block;
     }
     .dcard__body {
-      margin: 0;
       padding: 22px 24px;
+    }
+    .dcard__body h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      letter-spacing: -0.01em;
+    }
+    .dcard__body p {
+      margin: 0;
       font-size: 14px;
       line-height: 1.65;
-      color: var(--grey-4);
-    }
-    .depth__notes {
-      margin-top: var(--space-3);
-      display: grid;
-      gap: 16px;
-    }
-    .depth__notes p {
-      margin: 0;
-      font-size: 15.5px;
-      line-height: 1.7;
       color: var(--grey-4);
     }
 
@@ -535,7 +555,7 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
     }
 
     /* ── Responsive ─────────────────────────────────────── */
-    @media (max-width: 680px) {
+    @media (max-width: 640px) {
       .fig__grid {
         grid-template-columns: 1fr;
         height: auto;
@@ -551,7 +571,15 @@ const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
         border-bottom: var(--border);
         aspect-ratio: 3 / 2;
       }
-      .depth__cards {
+      .statbar {
+        grid-auto-flow: row;
+      }
+      .statbar__seg + .statbar__seg {
+        border-left: none;
+        border-top: var(--border);
+      }
+      .pn-grid,
+      .depth__grid {
         grid-template-columns: 1fr;
       }
     }
