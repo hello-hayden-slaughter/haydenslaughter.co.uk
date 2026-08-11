@@ -112,8 +112,8 @@ import pnHero from '../../diagrams/powernaut/hero.html?raw';
       object-fit: cover;
     }
     .pcard__media--diagram {
-      /* Square box so the whole loop diagram fits without cropping */
-      aspect-ratio: 1 / 1;
+      /* 16:9 box; the square SVG is scaled to fit inside it (no cropping) */
+      aspect-ratio: 16 / 9;
       display: grid;
       place-items: center;
       background: var(--teal);

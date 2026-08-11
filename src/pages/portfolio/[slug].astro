@@ -342,18 +342,17 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
       color: var(--grey-2);
     }
 
-    /* Two images side by side, each shown WHOLE (natural aspect, no cropping) */
+    /* Two images side by side — each in its OWN frame (matches the PDF) */
     .fig__grid {
-      border: var(--border);
-      box-shadow: var(--shadow-hard);
-      background: var(--paper);
-      overflow: hidden;
       display: grid;
       grid-template-columns: var(--cols);
-      gap: 18px;
+      gap: 22px;
       align-items: start;
     }
     .fig__cell {
+      border: var(--border);
+      box-shadow: var(--shadow-hard);
+      background: var(--paper);
       overflow: hidden;
     }
     .fig__cell img {
