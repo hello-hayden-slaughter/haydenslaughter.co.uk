@@ -9,10 +9,12 @@ export const site = {
   role: 'Product builder & leader',
   location: 'Brighton, UK',
   email: 'hello@haydenslaughter.co.uk',
+  phone: '07817 368519',
   tagline:
     'Portfolio of Hayden Slaughter, a zero-to-one product builder in Brighton who turns the early-stage mess into products people love.',
   links: {
     email: 'mailto:hello@haydenslaughter.co.uk',
+    phone: 'tel:+447817368519',
     linkedin: 'https://www.linkedin.com/in/hayden-slaughter-83094957/',
     github: 'https://github.com/haydenslaughter',
   },

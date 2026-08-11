@@ -19,6 +19,8 @@ import { cv } from '../data/cv';
         <p class="cv-contact">
           {cv.contact.location}
           <span class="dot">·</span>
+          <a href={cv.contact.phone.href}>{cv.contact.phone.label}</a>
+          <span class="dot">·</span>
           <a href={`mailto:${cv.contact.email}`}>{cv.contact.email}</a>
           <span class="dot">·</span>
           <a href={cv.contact.linkedin.href}>{cv.contact.linkedin.label}</a>

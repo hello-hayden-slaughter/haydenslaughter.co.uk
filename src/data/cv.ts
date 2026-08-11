@@ -15,6 +15,7 @@ export const cv = {
   name: 'Hayden Slaughter',
   contact: {
     location: 'Brighton, UK',
+    phone: { label: '07817 368519', href: 'tel:+447817368519' },
     email: 'hello@haydenslaughter.co.uk',
     linkedin: {
       label: 'linkedin.com/in/hayden-slaughter-83094957',
