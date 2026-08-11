@@ -3,7 +3,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteNav from '../../components/SiteNav.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { caseStudies } from '../../data/caseStudies';
-import pnHero from '../../diagrams/powernaut/hero.html?raw';
 ---
 
 <BaseLayout
@@ -25,13 +24,9 @@ import pnHero from '../../diagrams/powernaut/hero.html?raw';
       {
         caseStudies.map((cs) => (
           <a class="pcard" href={`/portfolio/${cs.slug}`}>
-            {cs.cardImage ? (
-              <div class="pcard__media">
-                <img src={cs.cardImage} alt={cs.hero?.alt ?? cs.name} loading="lazy" />
-              </div>
-            ) : (
-              <div class="pcard__media pcard__media--diagram" set:html={pnHero} />
-            )}
+            <div class="pcard__media">
+              <img src={cs.cardImage} alt={cs.hero?.alt ?? cs.name} loading="lazy" />
+            </div>
             <div class="pcard__body">
               <div class="pcard__top">
                 <span class="pcard__name">{cs.name}</span>
@@ -110,34 +105,6 @@ import pnHero from '../../diagrams/powernaut/hero.html?raw';
       width: 100%;
       height: 100%;
       object-fit: cover;
-    }
-    .pcard__media--diagram {
-      /* 16:9 box; the square SVG is scaled to fit inside it (no cropping) */
-      aspect-ratio: 16 / 9;
-      display: grid;
-      place-items: center;
-      background: var(--teal);
-      padding: 18px;
-    }
-    .pcard__media--diagram :global(div) {
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      width: auto !important;
-      height: 100% !important;
-      max-width: 100%;
-      display: grid !important;
-      place-items: center;
-    }
-    .pcard__media--diagram :global(svg) {
-      width: auto !important;
-      height: 100% !important;
-      max-width: 100% !important;
-      max-height: 100% !important;
-      margin: 0 !important;
-      display: block;
     }
     .pcard__body {
       padding: 24px 24px 26px;

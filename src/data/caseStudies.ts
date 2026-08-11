@@ -41,8 +41,8 @@ export interface Beat {
   body: string[];
   figures?: Figure[];
   quote?: Quote;
-  /** Mint stat bar segments, e.g. ["4.6 stars", "hours to minutes", "critics to advocates"]. */
-  stat?: string[];
+  /** Mint stat bar segments — a bold figure over a small label (matches the PDF). */
+  stat?: { big: string; small: string }[];
 }
 export interface DepthItem {
   title: string;
@@ -167,7 +167,11 @@ const indra: CaseStudy = {
           caption: `On the road and on site. Real jobs, real installers, and the research that reshaped the product.`,
         },
       ],
-      stat: ['4.6 stars, installer app', 'hours to minutes to commission', 'fitters from critics to advocates'],
+      stat: [
+        { big: '4.6★', small: 'Installer app' },
+        { big: 'Hours → minutes', small: 'To commission' },
+        { big: 'Critics → advocates', small: 'The fitters themselves' },
+      ],
     },
     {
       title: 'The best-rated app in the UK',
@@ -257,6 +261,7 @@ const powernaut: CaseStudy = {
   standfirst: `I joined Powernaut on a three-day-a-week UX contract and within a month I was running the product function and advising on a business pivot. Embedded new ways of working that deliver real customer value and led the strategy the investors backed.`,
   summary: `First product hire. I took a company chasing every market and narrowed it to one it could win, and built the product function to make it real.`,
   tags: ['26 interviews, 9 countries', 'one strategy the business runs on', 'investor-backed direction'],
+  cardImage: '/portfolio/img/pn-card.png',
   whatIBuilt: [
     "A 26-interview research programme across nine countries that produced the company's new direction",
     'The product strategy, one shape the whole business works from',

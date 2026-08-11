@@ -150,7 +150,12 @@ for (const src of gridSrcs) arMap[src] = await aspectRatio(src);
 
             {beat.stat && (
               <div class="statbar">
-                {beat.stat.map((s) => <span class="statbar__seg">{s}</span>)}
+                {beat.stat.map((s) => (
+                  <div class="statbar__seg">
+                    <span class="statbar__big">{s.big}</span>
+                    <span class="statbar__small">{s.small}</span>
+                  </div>
+                ))}
               </div>
             )}
 
@@ -463,14 +468,27 @@ for (const src of gridSrcs) arMap[src] = await aspectRatio(src);
       grid-auto-columns: 1fr;
     }
     .statbar__seg {
-      padding: 18px 20px;
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 15px;
-      text-align: center;
+      padding: 20px 22px;
     }
     .statbar__seg + .statbar__seg {
       border-left: var(--border);
+    }
+    .statbar__big {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(20px, 2.4vw, 26px);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .statbar__small {
+      display: block;
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--grey-3);
     }
 
     /* ── Pull-quote (standalone) ────────────────────────── */
