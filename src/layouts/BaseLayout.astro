@@ -41,7 +41,8 @@ const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#1e7a72" />
 
-    <title>{title}</title>
+    <!-- Browser tab always reads the name; og/twitter keep the descriptive per-page title. -->
+    <title>Hayden Slaughter</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
