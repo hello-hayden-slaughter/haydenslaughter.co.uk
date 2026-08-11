@@ -70,7 +70,7 @@
   --space-5: 40px; /* section */
   --space-7: 56px; /* major break */
   --measure-body: 66ch;
-  --page-max: 1000px;
+  --page-max: 820px;
 
   /* ── Construction: 2px border, hard shadow, square corners */
   --border-w: 2px;

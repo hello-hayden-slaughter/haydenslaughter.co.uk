@@ -189,7 +189,7 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
     /* Unified document column (matches the PDF: text and images share one width) */
     .doc {
       width: 100%;
-      max-width: 792px;
+      max-width: var(--page-max);
       margin-inline: auto;
       padding-inline: 24px;
       box-sizing: border-box;
@@ -342,6 +342,7 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
       color: var(--grey-2);
     }
 
+    /* Two images side by side, each shown WHOLE (natural aspect, no cropping) */
     .fig__grid {
       border: var(--border);
       box-shadow: var(--shadow-hard);
@@ -350,32 +351,15 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
       display: grid;
       grid-template-columns: var(--cols);
       gap: 18px;
-      height: clamp(220px, 40vw, 300px);
+      align-items: start;
     }
     .fig__cell {
       overflow: hidden;
     }
     .fig__cell img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       display: block;
-    }
-    /* Contain grid: diagrams/screens shown whole, centred, not cropped */
-    .fig__grid--contain {
-      height: auto;
-    }
-    .fig__grid--contain .fig__cell {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px;
-    }
-    .fig__grid--contain .fig__cell img {
-      width: 100%;
-      height: auto;
-      max-height: 300px;
-      object-fit: contain;
     }
 
     .fig__frame {
@@ -602,10 +586,6 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
     @media (max-width: 640px) {
       .fig__grid {
         grid-template-columns: 1fr;
-        height: auto;
-      }
-      .fig__cell {
-        aspect-ratio: 3 / 2;
       }
       .fig__pq {
         grid-template-columns: 1fr;

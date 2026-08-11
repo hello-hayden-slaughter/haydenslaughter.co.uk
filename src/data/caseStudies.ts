@@ -140,8 +140,8 @@ const indra: CaseStudy = {
       ],
       figures: [
         {
-          layout: 'frame',
-          imgs: [img('indra-5.jpg', 'The installer commissioning journey, mapped end to end', 'natural')],
+          layout: 'photo',
+          imgs: [img('indra-5.jpg', 'The installer commissioning journey, mapped end to end')],
           caption: `The commissioning journey, mapped end to end. Part of the evidence that carried the case.`,
         },
       ],
@@ -176,8 +176,8 @@ const indra: CaseStudy = {
       ],
       figures: [
         {
-          layout: 'frame',
-          imgs: [img('indra-8.jpg', 'The customer app home, charging and boost screens', 'natural')],
+          layout: 'photo',
+          imgs: [img('indra-8.jpg', 'The customer app home, charging and boost screens')],
           caption: `The customer app. Charging status, scheduling and cost, simple enough to check at a glance.`,
         },
         {
