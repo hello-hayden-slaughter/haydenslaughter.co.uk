@@ -4,11 +4,33 @@ import SiteNav from '../../components/SiteNav.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { caseStudies, type Figure } from '../../data/caseStudies';
 
+// Powernaut is anonymised / diagram-led. Its figures are self-contained,
+// inline-styled HTML/SVG lifted verbatim from the portfolio source, mapped to
+// the beat they belong to.
+import pnFig1 from '../../diagrams/powernaut/fig1.html?raw';
+import pnFig2 from '../../diagrams/powernaut/fig2.html?raw';
+import pnFig3 from '../../diagrams/powernaut/fig3.html?raw';
+import pnFig4 from '../../diagrams/powernaut/fig4.html?raw';
+import pnFig5 from '../../diagrams/powernaut/fig5.html?raw';
+import pnFig6 from '../../diagrams/powernaut/fig6.html?raw';
+import pnFig7 from '../../diagrams/powernaut/fig7.html?raw';
+
+const powernautDiagrams: Record<number, string[]> = {
+  0: [pnFig1],
+  1: [pnFig2],
+  2: [pnFig3],
+  3: [pnFig4, pnFig5],
+  4: [pnFig6],
+  5: [pnFig7],
+};
+
 export function getStaticPaths() {
   return caseStudies.map((cs) => ({ params: { slug: cs.slug }, props: { cs } }));
 }
 
 const { cs } = Astro.props;
+const diagramsFor = (idx: number): string[] =>
+  cs.slug === 'powernaut' ? (powernautDiagrams[idx] ?? []) : [];
 ---
 
 <BaseLayout title={`${cs.name} — Hayden Slaughter`} description={cs.oneLiner}>
@@ -75,6 +97,7 @@ const { cs } = Astro.props;
                 {fig.caption && <figcaption>{fig.caption}</figcaption>}
               </figure>
             ))}
+            {diagramsFor(i).map((d) => <div class="pn-figure" set:html={d} />)}
           </section>
         ))
       }
@@ -262,6 +285,20 @@ const { cs } = Astro.props;
       font-size: 12px;
       line-height: 1.5;
       color: var(--grey-2);
+    }
+
+    /* Embedded Powernaut diagrams (self-contained inline-styled HTML/SVG) */
+    .pn-figure {
+      margin: var(--space-3) 0 0;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .pn-figure :global(figure) {
+      margin: 0;
+    }
+    .pn-figure :global(img) {
+      max-width: 100%;
+      height: auto;
     }
 
     .pull {
