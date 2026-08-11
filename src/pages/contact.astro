@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title="Contact — Hayden Slaughter"
+  description="Get in touch with Hayden Slaughter. Email hello@haydenslaughter.co.uk or connect on LinkedIn."
+>
+  <SiteNav />
+
+  <main class="container contact">
+    <p class="eyebrow">Contact</p>
+    <h1>If your problem is ambiguous, there's a lot to build, and it needs to move fast, let's talk.</h1>
+
+    <div class="contact__cards">
+      <div class="contact__card">
+        <p class="contact__label">Email</p>
+        <p class="contact__value">
+          <a href={site.links.email}>{site.email}</a>
+        </p>
+        <p class="contact__hint">The best way to reach me.</p>
+      </div>
+
+      <div class="contact__card">
+        <p class="contact__label">LinkedIn</p>
+        <p class="contact__value">
+          <a href={site.links.linkedin} target="_blank" rel="noopener"
+            >linkedin.com/in/hayden-slaughter</a
+          >
+        </p>
+        <p class="contact__hint">Connect or message me there.</p>
+      </div>
+    </div>
+
+    <p class="contact__loc">Based in {site.location}.</p>
+  </main>
+
+  <SiteFooter />
+
+  <style>
+    .contact {
+      padding-block: var(--space-7);
+    }
+    .contact h1 {
+      margin: 10px 0 0;
+      max-width: 20ch;
+    }
+    .contact__cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-3);
+      margin-top: var(--space-5);
+    }
+    .contact__card {
+      border: var(--border);
+      background: var(--surface-card);
+      box-shadow: var(--shadow-hard);
+      padding: 28px 30px;
+    }
+    .contact__label {
+      margin: 0;
+      font-family: var(--font-label);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+    .contact__value {
+      margin: 12px 0 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(18px, 2.6vw, 22px);
+      letter-spacing: -0.01em;
+      word-break: break-word;
+    }
+    .contact__value a {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 2px solid var(--teal);
+    }
+    .contact__value a:hover {
+      color: var(--red);
+      border-color: var(--red);
+    }
+    .contact__hint {
+      margin: 12px 0 0;
+      font-size: 14px;
+      color: var(--grey-3);
+    }
+    .contact__loc {
+      margin-top: var(--space-5);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--grey-2);
+    }
+  </style>
+</BaseLayout>

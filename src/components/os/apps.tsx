@@ -86,7 +86,7 @@ const WorkWindow = () => (
         </p>
         <p style="margin:10px 0 0;font-size:11px;color:var(--grey-3)">{cs.tags.join(' · ')}</p>
         <p style="margin:10px 0 0">
-          <a href={`/work/${cs.slug}`} style="font-size:12.5px;font-weight:700">
+          <a href={`/portfolio/${cs.slug}`} style="font-size:12.5px;font-weight:700">
             Read the full story →
           </a>
         </p>
@@ -122,7 +122,7 @@ const AboutWindow = () => (
       <p style="margin:0 0 14px;font-size:13.5px;line-height:1.75">{p}</p>
     ))}
     <p style="margin:0;font-size:13px">
-      <a href="/cv">Open the CV →</a> &nbsp; <a href="/work">See the work →</a>
+      <a href="/">Open the CV →</a> &nbsp; <a href="/portfolio">See the work →</a>
     </p>
   </div>
 );

@@ -2,312 +2,388 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteNav from '../components/SiteNav.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { hero, intro, howIWork, fit, journey, builtWithAI } from '../data/site';
-import { caseStudies } from '../data/caseStudies';
+import { cv } from '../data/cv';
 ---
 
-<BaseLayout title="Hayden Slaughter — Product Builder">
+<BaseLayout
+  title="Hayden Slaughter — Head of Product & Design"
+  description="Hayden Slaughter, Head of Product & Design. Zero-to-one product leader, AI-native, Brighton. First product hire at Powernaut and Indra; two AI products shipped solo."
+>
   <SiteNav />
 
-  <main>
-    <!-- Hero -->
-    <section class="container hero">
-      <p class="eyebrow">{hero.eyebrow}</p>
-      <h1 class="hero__statement">{hero.statement}</h1>
-      <p class="hero__sub measure">{hero.sub}</p>
-      <div class="hero__cta">
-        <a class="btn btn--primary" href="/work">See the work</a>
-        <a class="btn btn--ghost" href="/desktop">Enter Slaughter OS →</a>
-      </div>
-    </section>
+  <main class="page">
+    <div class="toolbar">
+      <a class="dl" href="/Hayden-Slaughter-CV.pdf" download>
+        <span class="dl__icon">↓</span> Download CV (PDF)
+      </a>
+    </div>
 
-    <!-- Intro -->
-    <section class="container section">
-      <div class="measure prose">
-        {intro.map((p) => <p>{p}</p>)}
-      </div>
-    </section>
+    <article class="sheet">
+      <header class="sheet__head">
+        <div class="sheet__kicker">
+          <span>{cv.kicker}</span>
+          <span class="sheet__tag">NORMAL.CV</span>
+        </div>
+        <h1>{cv.name}</h1>
+        <p class="sheet__contact">
+          {cv.contact.location}
+          <span class="dot">·</span>
+          <a href={`mailto:${cv.contact.email}`}>{cv.contact.email}</a>
+          <span class="dot">·</span>
+          <a href={cv.contact.linkedin.href}>{cv.contact.linkedin.label}</a>
+        </p>
+        <p class="sheet__summary">{cv.summary}</p>
+      </header>
 
-    <!-- The work -->
-    <section class="container section" id="work">
-      <p class="eyebrow">The work</p>
-      <h2 class="section__h">Proof, twice over.</h2>
-      <div class="home-cards">
+      <section class="sheet__body">
+        <p class="sheet__label">EXPERIENCE</p>
         {
-          caseStudies.map((cs) => (
-            <a class="hcard" href={`/work/${cs.slug}`}>
-              <div class="hcard__top">
-                <span class="hcard__name">{cs.name}</span>
-                <span class="hcard__kind">{cs.kind} · {cs.period}</span>
-              </div>
-              <p class="hcard__summary">{cs.summary}</p>
-              <div class="hcard__tags">
-                {cs.tags.map((t) => (
-                  <span class="hcard__tag">{t}</span>
+          cv.experience.map((role) => (
+            <div class="role">
+              <div class="role__meta">
+                <span class="role__period">{role.period}</span>
+                {role.meta.map((m) => (
+                  <span class="role__metaline">{m}</span>
                 ))}
               </div>
-              <span class="hcard__cta">Read the story →</span>
-            </a>
+              <div class="role__main">
+                <h2>
+                  {role.role}
+                  {role.org && <span class="role__org"> · {role.org}</span>}
+                </h2>
+                {role.blurb && <p class="role__blurb">{role.blurb}</p>}
+                {role.bullets && (
+                  <ul class="role__bullets">
+                    {role.bullets.map((b) => (
+                      <li>
+                        <span class="bullet" />
+                        <span set:html={b} />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
           ))
         }
-      </div>
-    </section>
+      </section>
 
-    <!-- Built with AI -->
-    <section class="ai-band">
-      <div class="container">
-        <p class="eyebrow eyebrow--yellow">Built with AI</p>
-        <h2 class="section__h ai-band__h">{builtWithAI.lead}</h2>
-        <div class="ai-cards">
+      <section class="sheet__ai">
+        <p class="sheet__label sheet__label--yellow">INDEPENDENT AI PRODUCTS · SHIPPED, PUBLIC</p>
+        <div class="ai-grid">
           {
-            builtWithAI.products.map((p) => (
-              <div class="aicard">
-                <div class="aicard__top">
-                  <span class="aicard__name">{p.name}</span>
-                  <span class="aicard__status">{p.status}</span>
+            cv.aiProducts.map((p) => (
+              <div class="ai-card">
+                <div class="ai-card__top">
+                  <span class="ai-card__name">{p.name}</span>
+                  <span class="ai-card__status">{p.status}</span>
                 </div>
-                <p class="aicard__kind">{p.kind}</p>
-                <p class="aicard__body">{p.body}</p>
+                <p class="ai-card__kind">{p.kind}</p>
+                <p class="ai-card__body">{p.body}</p>
               </div>
             ))
           }
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- How I work -->
-    <section class="container section" id="how-i-work">
-      <p class="eyebrow">How I work</p>
-      <h2 class="section__h measure">{howIWork.statement}</h2>
-      <div class="scales">
-        {howIWork.scales.map((s) => <span class="scale">{s}</span>)}
-      </div>
-    </section>
-
-    <!-- Fit, honestly -->
-    <section class="container section" id="fit">
-      <p class="eyebrow">Fit, honestly</p>
-      <div class="measure prose">
-        {fit.map((p) => <p>{p}</p>)}
-      </div>
-      <a class="btn btn--primary fit__cta" href="mailto:hello@haydenslaughter.co.uk">Get in touch</a>
-    </section>
-
-    <!-- Journey -->
-    <section class="container section section--quiet">
-      <p class="eyebrow">The journey</p>
-      <p class="measure journey">{journey}</p>
-    </section>
+      <section class="sheet__foot">
+        <p class="sheet__label">SKILLS</p>
+        <div class="chips">
+          {cv.skills.map((s) => <span class="chip">{s}</span>)}
+        </div>
+        <div class="two-up">
+          <div>
+            <p class="sheet__label">EDUCATION</p>
+            {
+              cv.education.map((e) => (
+                <p class="edu">
+                  <strong>{e.degree}</strong>
+                  <br />
+                  {e.place}
+                </p>
+              ))
+            }
+          </div>
+          <div>
+            <p class="sheet__label">OUTSIDE WORK</p>
+            <p class="edu">{cv.outsideWork}</p>
+          </div>
+        </div>
+      </section>
+    </article>
   </main>
 
   <SiteFooter />
 
   <style>
-    .hero {
-      padding-block: var(--space-7) var(--space-5);
-    }
-    .hero__statement {
-      margin: 14px 0 0;
-      font-size: clamp(34px, 6vw, 64px);
-      max-width: 18ch;
-    }
-    .hero__sub {
-      margin: 22px 0 0;
-      font-size: clamp(17px, 2.4vw, 20px);
-      line-height: 1.5;
-      color: var(--grey-3);
-    }
-    .hero__cta {
+    .page {
+      padding: var(--space-5) var(--space-3) var(--space-7);
       display: flex;
-      gap: var(--space-2);
-      flex-wrap: wrap;
-      margin-top: var(--space-3);
+      flex-direction: column;
+      align-items: center;
+      background: var(--canvas);
     }
-
-    .btn {
-      display: inline-block;
+    .toolbar {
+      width: 790px;
+      max-width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: var(--space-2);
+    }
+    .dl {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       font-family: var(--font-display);
-      font-size: 14px;
       font-weight: 700;
-      padding: 12px 20px;
-      border: var(--border);
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .btn--primary {
-      background: var(--ink);
+      font-size: 13px;
       color: var(--paper);
+      background: var(--ink);
+      border: var(--border);
       box-shadow: var(--shadow-hard-sm);
+      padding: 10px 16px;
+      text-decoration: none;
     }
-    .btn--primary:hover {
+    .dl:hover {
       background: var(--teal);
       color: var(--paper);
     }
-    .btn--ghost {
-      background: transparent;
-      color: var(--ink);
-      font-weight: 600;
-    }
-    .btn--ghost:hover {
-      background: var(--yellow);
-      color: var(--ink);
-    }
-
-    .section {
-      padding-block: var(--space-5);
-    }
-    .section--quiet {
-      opacity: 0.92;
-    }
-    .section__h {
-      margin: 10px 0 0;
-      font-size: clamp(26px, 4vw, 36px);
-    }
-    .prose p {
-      margin: 0 0 18px;
-      font-size: 17px;
-      line-height: 1.7;
-    }
-    .prose p:last-child {
-      margin-bottom: 0;
-    }
-
-    .home-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: var(--space-3);
-      margin-top: var(--space-3);
-    }
-    .hcard {
-      display: flex;
-      flex-direction: column;
-      border: var(--border);
-      background: var(--surface-card);
-      box-shadow: var(--shadow-hard);
-      padding: 26px 24px;
-      text-decoration: none;
-      color: var(--ink);
-      transition: transform 120ms ease, box-shadow 120ms ease;
-    }
-    .hcard:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 6px 6px 0 rgba(22, 19, 14, 0.85);
-    }
-    .hcard__name {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 22px;
-      letter-spacing: -0.02em;
-    }
-    .hcard__kind {
-      display: block;
-      margin-top: 4px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--grey-2);
-    }
-    .hcard__summary {
-      margin: 14px 0 0;
+    .dl__icon {
       font-size: 15px;
-      line-height: 1.6;
-      color: var(--grey-3);
-      flex: 1;
     }
-    .hcard__tags {
+
+    .sheet {
+      width: 790px;
+      max-width: 100%;
+      background: var(--paper);
+      border: var(--border);
+      box-shadow: var(--shadow-hard-lg);
+      box-sizing: border-box;
+    }
+    .sheet__head {
+      padding: 56px 64px 0;
+    }
+    .sheet__kicker {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin: 16px 0 0;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
     }
-    .hcard__tag {
+    .sheet__kicker > span:first-child {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      color: var(--ink);
+    }
+    .sheet__tag {
+      font-family: var(--font-label);
+      font-size: 9px;
+      color: var(--red);
+      flex: none;
+    }
+    .sheet__head h1 {
+      margin: 16px 0 0;
+      font-size: 42px;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+    }
+    .sheet__contact {
+      margin: 14px 0 0;
       font-family: var(--font-mono);
       font-size: 11px;
-      border: var(--border-thin);
-      padding: 3px 9px;
+      line-height: 1.7;
+      color: var(--grey-3);
     }
-    .hcard__cta {
-      margin-top: 18px;
+    .sheet__contact a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .sheet__contact a:hover {
+      color: var(--red);
+    }
+    .sheet__contact .dot {
+      color: var(--grey-1);
+      padding: 0 2px;
+    }
+    .sheet__summary {
+      margin: 28px 0 0;
+      padding: 2px 0 2px 16px;
+      border-left: 4px solid var(--teal);
+      font-size: 16px;
+      line-height: 1.65;
+      max-width: 66ch;
+    }
+    .sheet__body {
+      padding: 38px 64px 40px;
+    }
+    .sheet__label {
+      margin: 0 0 20px;
       font-family: var(--font-mono);
-      font-size: 13px;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--grey-2);
+    }
+    .sheet__label--yellow {
+      color: var(--yellow);
+      font-family: var(--font-label);
+    }
+    .role {
+      border-top: 2px solid var(--ink);
+      padding: 22px 0 26px;
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 28px;
+    }
+    .role__meta {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .role__period {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--ink);
+      color: var(--mint);
+      padding: 4px 10px;
+    }
+    .role__metaline {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--grey-3);
+    }
+    .role__main h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .role__org {
       color: var(--teal);
     }
-
-    .ai-band {
+    .role__blurb {
+      margin: 12px 0 0;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .role__bullets {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 14px 0 0;
+    }
+    .role__bullets li {
+      display: flex;
+      gap: 14px;
+      align-items: baseline;
+      font-size: 14.5px;
+      line-height: 1.6;
+    }
+    .bullet {
+      width: 7px;
+      height: 7px;
+      background: var(--teal);
+      flex: none;
+      transform: translateY(-1px);
+    }
+    .sheet__ai {
+      padding: 36px 64px 42px;
       background: var(--ink);
       color: var(--paper);
-      padding-block: var(--space-7);
-      margin-block: var(--space-5);
     }
-    .eyebrow--yellow {
-      color: var(--yellow);
-    }
-    .ai-band__h {
-      color: var(--paper);
-    }
-    .ai-cards {
+    .ai-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--space-2);
-      margin-top: var(--space-3);
+      gap: 20px;
     }
-    .aicard {
+    .ai-card {
       border: 2px solid var(--paper);
-      padding: 22px 24px;
+      padding: 18px 22px;
     }
-    .aicard__top {
+    .ai-card__top {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
     }
-    .aicard__name {
+    .ai-card__name {
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 20px;
+      font-size: 19px;
+      letter-spacing: -0.02em;
     }
-    .aicard__status {
+    .ai-card__status {
       font-family: var(--font-mono);
       font-size: 10px;
       color: var(--mint);
     }
-    .aicard__kind {
+    .ai-card__kind {
       margin: 6px 0 0;
       font-family: var(--font-mono);
       font-size: 11px;
       color: var(--grey-1);
     }
-    .aicard__body {
+    .ai-card__body {
       margin: 12px 0 0;
-      font-size: 14px;
+      font-size: 13.5px;
       line-height: 1.6;
       color: var(--grey-1);
     }
-
-    .scales {
+    .sheet__foot {
+      padding: 34px 64px 42px;
+    }
+    .chips {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: var(--space-3);
     }
-    .scale {
+    .chip {
       font-family: var(--font-mono);
-      font-size: 12px;
+      font-size: 11px;
       border: var(--border-thin);
-      padding: 6px 12px;
+      padding: 4px 10px;
     }
-
-    .fit__cta {
-      margin-top: var(--space-3);
+    .two-up {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin: 30px 0 0;
     }
-    .journey {
-      margin: 12px 0 0;
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--grey-3);
+    .edu {
+      margin: 0 0 12px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .edu strong {
+      font-family: var(--font-display);
+      font-weight: 700;
     }
 
     @media (max-width: 640px) {
-      .ai-cards {
+      .toolbar {
+        justify-content: stretch;
+      }
+      .dl {
+        width: 100%;
+        justify-content: center;
+      }
+      .sheet__head,
+      .sheet__body,
+      .sheet__ai,
+      .sheet__foot {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .role,
+      .ai-grid,
+      .two-up {
         grid-template-columns: 1fr;
+      }
+      .sheet__head h1 {
+        font-size: 34px;
       }
     }
   </style>

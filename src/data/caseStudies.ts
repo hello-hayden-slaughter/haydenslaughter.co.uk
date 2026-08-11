@@ -1,245 +1,301 @@
 /**
- * Case studies — the two anchors. Verbatim from the latest portfolio pieces
- * (indra-case-study.md, powernaut-case-study.html). Powernaut is the current
- * employer: named per CV v2, but no live-strategy specifics beyond what the
- * source case study already surfaces. Voice preserved (no em dashes/colons).
+ * Case studies — the two anchors. Content + images transcribed from the latest
+ * portfolio piece (hayden-slaughter-portfolio.html). Indra is named and
+ * image-led; Powernaut is the current employer, anonymised and text-led
+ * (no photos, no live-strategy specifics beyond what the source surfaces).
+ * Voice preserved (no em dashes, no colons in body copy).
  */
 
+export interface Img {
+  src: string;
+  alt: string;
+}
+export interface Figure {
+  imgs: Img[];
+  caption?: string;
+}
+export interface Quote {
+  text: string;
+  attrib?: string;
+  note?: string;
+}
 export interface Beat {
-  n: string;
   title: string;
   subhead: string;
   body: string[];
-  quote?: { text: string; attrib: string };
-  stat?: string;
+  figures?: Figure[];
+  quote?: Quote;
 }
-
+export interface DepthItem {
+  body: string;
+  figure?: Figure;
+}
 export interface CaseStudy {
   slug: string;
   name: string;
   kind: string;
   period: string;
-  /** One-line hook shown at the top of the study. */
+  roleTitle: string;
   oneLiner: string;
-  /** Short standfirst under the hook. */
-  lede: string;
-  /** Card summary on the work index / home. */
+  standfirst: string;
   summary: string;
   tags: string[];
-  outcomes: { value: string; label: string }[];
+  hero?: Img;
+  cardImage?: string;
+  whatIBuilt: string[];
   beats: Beat[];
-  depth: { title: string; body: string }[];
-  throughLine: string;
+  depthHeading?: string;
+  depth?: DepthItem[];
 }
+
+const img = (n: string, alt: string): Img => ({ src: `/portfolio/img/${n}`, alt });
 
 const indra: CaseStudy = {
   slug: 'indra',
   name: 'Indra Renewable Technologies',
   kind: 'EV charging scale-up',
   period: '2021 – 2024',
-  oneLiner:
-    'A three-week brief turned into three years running everything customer-facing, and I found a problem quietly costing us sales and fixed it end to end.',
-  lede: 'A short contract that grew into the product function, the research practice, the team, and an installer app that won back the tradespeople who had been sending our customers elsewhere.',
-  summary:
-    "Contract designer to product lead. A three-week brief turned into three years running everything customer-facing. I found a problem quietly costing us sales, and fixed it end to end.",
+  roleTitle: 'Head of Product & Design',
+  oneLiner: `I joined on a three-week UX brief and left three and a half years later running everything customer-facing.`,
+  standfirst: `Four products built and run, two native mobile apps and two web platforms, with the product function, research practice and team of seven behind them all built from nothing.`,
+  summary: `A three-week brief turned into three years running everything customer-facing. I found a problem quietly costing us sales, and fixed it end to end.`,
   tags: ['#1-rated app', 'hours to minutes', "world's largest V2H trial"],
-  outcomes: [
-    { value: '#1', label: 'The number-one-rated domestic charging app in the UK' },
-    { value: 'hrs → min', label: 'Installer commissioning, fitters from critics to advocates' },
-    { value: '130,000+', label: 'Chargers on the operations platform, running 98% faster' },
-    { value: 'from nothing', label: 'A product function, research practice and team of seven' },
+  hero: img('indra-1.jpg', 'The Indra customer app screens'),
+  cardImage: '/portfolio/img/indra-1.jpg',
+  whatIBuilt: [
+    'The number-one-rated domestic charging app in the UK',
+    'An installer app that cut commissioning from hours to minutes and turned fitters from critics to advocates',
+    'An operations platform running a fleet of 130,000+ chargers, 98% faster than what it replaced',
+    'A product function, a research practice and a team of seven, built from nothing',
   ],
   beats: [
     {
-      n: '01',
       title: 'How it started',
-      subhead:
-        'I was brought in for a contained piece of UX work. It turned out to be the start of building the whole product.',
+      subhead: `I was brought in for a contained piece of UX work. It turned out to be the start of building the whole product function.`,
       body: [
-        'A UI designer at an agency asked me to come and work with her on a charging app. She had the visual design, and she wanted me for the UX. On paper it was small and self-contained, a few weeks of work on a fixed fee, with someone else building the back end.',
-        'It did not stay that way for long. The more I got into it, the clearer it became that the questions that mattered, what the product should be and who it was really for, had not been answered yet. So I started answering them. I ran workshops with the founder, worked out what we were actually building, and shaped it from there.',
-        'The short contract turned into a rolling one, and before long I was in-house and running the app.',
+        `A UI designer at an agency asked me to come and work with her on a charging app. She had the visual design, and she wanted me for the UX. On paper it was small and self-contained, a few weeks of work on a fixed fee, with someone else building the back end.`,
+        `It did not stay small. Through the kickoff sessions and early explorations it became clear that the questions that mattered, what the product should be and who it was really for, had not been answered yet. So I started answering them. I ran workshops with the founder, worked out what we were actually building, and shaped it from there.`,
+        `The short contract turned into a rolling one, and before long I was embedded in the team and running the app.`,
+      ],
+      figures: [
+        {
+          imgs: [
+            img('indra-2.jpg', 'The kick-off FigJam board'),
+            img('indra-3.jpg', 'The mental-model work'),
+          ],
+          caption: `The kick-off board and the mental-model work. Working out what we were actually building, and for whom.`,
+        },
       ],
     },
     {
-      n: '02',
       title: 'The leak nobody had traced',
-      subhead:
-        'Sales were falling and no one knew why. We found the answer by talking to the people fitting the product.',
+      subhead: `Customers ask their installer what to buy. Ours were answering with a competitor's name.`,
       body: [
-        'At Indra, sales were in decline and targets were consistently being missed. Installers were unhappy with our product, but no one could put a finger on exactly why. I formed a small team to investigate and understand what was happening.',
-        'What we uncovered was uncomfortable. The installers who fit our chargers, the tradespeople on the tools every day, hated fitting ours. They were complicated, fiddly and took an excessive amount of time to commission. So when a customer asked for a recommendation, they pointed them at a competitor that was easier and quicker to put on the wall. The people we relied on to fit and promote our product were quietly sending business elsewhere, and nobody had traced it back.',
+        `At Indra, sales were in decline and targets were consistently being missed. Installers were unhappy with our product, but no one could put a finger on exactly why. I formed a small team to investigate and understand what was happening.`,
+        `What we uncovered was uncomfortable. The installers who fit our chargers, the tradespeople on the tools every day, hated fitting ours. They were complicated, fiddly and took an excessive amount of time to commission. So when a customer asked for a recommendation, they pointed them at a competitor that was easier and quicker to put on the wall. The people we relied on to fit and promote our product were quietly sending business elsewhere, and nobody had traced it back.`,
       ],
+      figures: [{ imgs: [img('indra-4.jpg', 'An installer fitting an Indra charger')] }],
+      quote: {
+        text: `Indra are the most complex to commission due to the connectivity.`,
+        attrib: 'Installer, field research',
+        note: `What the research kept hearing, in the trade's own words.`,
+      },
     },
     {
-      n: '03',
       title: 'Making the case upstairs',
-      subhead: "I took it to the C-suite and made installer pain the company's problem to fix.",
+      subhead: `I took it to the C-suite and made installer pain the company's problem to fix.`,
       body: [
-        'I took the findings to the C-suite and made the case that installer pain was costing us sales and reputation. We got the nod to assemble the team and build the solution.',
+        `Findings like these are awkward for a hardware company, and the warning was coming from the design side of the house rather than engineering. So I framed it commercially, lost sales and a damaged reputation, and put it in front of the leadership team. We came out with the nod, the team and the remit to build the solution.`,
+      ],
+      figures: [
+        {
+          imgs: [img('indra-5.jpg', 'The installer commissioning journey, mapped end to end')],
+          caption: `The commissioning journey, mapped end to end. Part of the evidence that carried the case.`,
+        },
       ],
     },
     {
-      n: '04',
       title: 'Building the fix, and changing the hardware',
-      subhead:
-        'An installer app built around how they actually work. Commissioning went from hours to minutes, and the research reshaped the physical product.',
+      subhead: `The leak closed. The findings kept travelling, into the hardware itself and the charger that came after.`,
       body: [
-        'I spent days on the road following and speaking to installers, observing them in the real world on real jobs. We took what we learnt and designed a solution around how they actually work. Commissioning a charger went from hours to minutes, and installers went from critics to advocates. The people who had been quietly steering customers elsewhere now had a reason to recommend us instead.',
-        'The research also highlighted a long-standing problem with the physical product, which we fed back to the hardware team. This led to a major change in the internal build of the existing product, and shaped how we would architect the next one.',
-        'Getting a hardware company to change its physical product off the back of a front-end team’s research is not a normal thing to be able to do. It happened because I made the commercial cost of not doing it impossible to ignore.',
+        `I spent days on the road following and speaking to installers, observing them in the real world on real jobs. We took what we learnt and designed a solution around how they actually work. Commissioning a charger went from hours to minutes, and installers went from critics to advocates. The people who had been quietly steering customers elsewhere now had a reason to recommend us instead. The app carried us over a quarterly sales target and reopened sales channels we had lost.`,
+        `The research also highlighted a long-standing problem with the physical product, which we fed back to the hardware team. This led to a major change in the internal build of the existing product, and shaped how we would architect the next one.`,
+        `Getting a hardware company to change its physical product off the back of a front-end team's research is not a normal thing to be able to do. It happened because I made the commercial cost of not doing it impossible to ignore.`,
       ],
-      stat: '4.6 stars, installer app. Hours to minutes to commission. Fitters from critics to advocates.',
+      figures: [
+        {
+          imgs: [
+            img('indra-6.jpg', 'Installers fitting a charger on site'),
+            img('indra-7.jpg', 'On site with installers at the chargers'),
+          ],
+          caption: `On the road and on site. Real jobs, real installers, and the research that reshaped the product.`,
+        },
+      ],
     },
     {
-      n: '05',
       title: 'The best-rated app in the UK',
-      subhead:
-        'In this market the app rating decides whether people buy the charger. I built ours into the best-rated in the country.',
+      subhead: `Nobody buys a charger without checking its app score first. That made the rating a sales number, and it was mine to move.`,
       body: [
-        'Alongside the installer work I owned the customer app, the thing people use to control their charger. I built it into the number-one-rated domestic charging app in its UK field, and it holds a 4.2.',
-        'In this market the rating does real work. People check it before they buy the charger, so the score in the store feeds straight into whether the hardware sells at all. Making it the best-rated app in the field was the point.',
+        `Alongside the installer work I owned the customer app, the thing people use every day to control their charger. It is the part of the product customers live with long after the installer's van has left. I built it into the number one rated UK charging app, holding an average 4.2 rating across the App Store and Google Play, and kept it there.`,
+        `The work was recognised beyond the app store ratings. In 2024 the customer facing app won the Best Use of Technology & Trends award at the Herefordshire & Worcestershire Chamber of Commerce Business Awards.`,
+      ],
+      figures: [
+        {
+          imgs: [img('indra-8.jpg', 'The customer app home, charging and boost screens')],
+          caption: `The customer app. Charging status, scheduling and cost, simple enough to check at a glance.`,
+        },
+        {
+          imgs: [img('indra-9.jpg', 'Collecting the award with the team')],
+          caption: `Best Use of Technology & Trends, Herefordshire & Worcestershire Chamber of Commerce Business Awards 2024, collected with the team.`,
+        },
       ],
     },
     {
-      n: '06',
       title: 'The team and the function I built around it',
-      subhead:
-        'None of this existed when I arrived. I built the product function, the research practice, the team, and the office they worked in.',
+      subhead: `None of this existed when I arrived. I built the product function, the research practice, the team, and the office we worked in.`,
       body: [
-        'When I arrived there was no product function. By the end I had built one and grown into the role that named it, owning everything customer-facing and reporting to the founder.',
-        'I hired a researcher as one of my first moves, and together we built a research practice that ran hundreds of sessions. The important part is that it did not sit in a drawer. I brought the customer’s voice into C-suite meetings on a regular cadence, so the whole business could hear what its users were actually saying, and every product decision had that behind it.',
-        'The team was seven people, and not seven tidy direct reports. It was a blend I had to actually lead, an external design agency, an app-development agency, a contract agile coach, and full-time people I hired myself. I stood them up in a second office I built from an empty room, furniture and kit and all. One of the back-end engineers asked to move onto the team because of the work we were doing. She did not have to move, she chose to.',
+        `Hiring a researcher was one of my first moves. Together we built a practice that ran hundreds of sessions, and none of it sat in a drawer. I took what customers were saying into the C-suite, month in, month out, so the whole business could hear its users, and every product decision had that behind it.`,
+        `The team was seven people, and not seven tidy direct reports. It was a blend of an external design agency, an app-development agency, a contract agile coach, and full-time people I hired myself. I stood up a satellite office from scratch, furniture, desks, chairs, computers, the lot. One of the back-end engineers asked to move onto the team because of the work we were doing. I put the structure in once, so everything the team built after it had a foundation underneath.`,
+      ],
+      figures: [
+        {
+          imgs: [
+            img('indra-10.jpg', 'The discover, define, build process the function ran on'),
+            img('indra-11.jpg', 'The numbers the function kept producing'),
+          ],
+          caption: `The process the function ran on, and the numbers it kept producing.`,
+        },
       ],
     },
     {
-      n: '07',
       title: 'Holding it together through the sale',
-      subhead:
-        'The company was acquired, the founder left and the top churned. I kept my team steady and shipping through it.',
+      subhead: `The company changed hands, the top churned. My team kept shipping.`,
       body: [
-        'The back half of my time there was turbulent. The company was acquired by a major energy group, the founder who had started it all and who I reported to left, and the leadership above me churned.',
-        'My job through that was to hold my own team steady. I kept the pressure and the politics away from them, held morale and momentum through a leadership vacuum, and kept the product shipping while the ground moved underneath us. The quiet part underneath it is that the product and the team I had built were a real part of what made the company worth buying. Once the new leadership was in, I was in the room with the incoming CEO and CTO, helping shape the product strategy for what came next.',
+        `The back half of my time there was turbulent. The company was acquired by a major energy group, the founder who had started it all left, and the leadership above me kept changing.`,
+        `My job through that was to hold my own team steady. I kept the pressure and the politics away from them, held morale and momentum through a leadership vacuum, and kept the product going out the door while the ground moved underneath us. The product and the team I had built were part of what made the company worth buying. Once the new leadership was in, I was in the room with the incoming CEO and CTO, helping shape the product strategy for what came next.`,
+      ],
+      figures: [
+        {
+          imgs: [img('indra-12.jpg', 'The team together')],
+          caption: `The team that kept shipping.`,
+        },
       ],
     },
   ],
+  depthHeading: 'More of what I built at Indra',
   depth: [
     {
-      title: 'The operations platform',
-      body: 'The tool the whole business ran on, support agents and installers alike, rebuilt around how those people actually worked and around customers who increasingly wanted to help themselves. Page loads went from 58 seconds to 1, a core search from around 5 seconds to under 1, with full test coverage on the critical path. It scaled to a fleet of more than 130,000 commissioned chargers.',
+      body: `The tool the whole business ran on, support agents and installers alike, rebuilt around how those people actually worked and around customers who increasingly wanted to help themselves. Page loads went from 58 seconds to 1, a core search from around 5 seconds to under 1, with full test coverage on the critical path. It scaled to a fleet of more than 130,000 commissioned chargers.`,
+      figure: {
+        imgs: [img('indra-13.jpg', 'DynaMO, the operations platform')],
+        caption: `DynaMO, the operations platform the fleet ran on.`,
+      },
     },
     {
-      title: "The world's largest vehicle-to-home trial",
-      body: 'I built and ran the software and the research behind it, a cohort of committed early adopters using their car as a home battery, powering the house at peak times and recharging when energy is cheaper and greener. Making that idea legible to an ordinary person was the hard part. The vision was the founder’s. The software that ran it was mine. Publicly documented by Indra, 200+ bidirectional chargers in UK homes.',
+      body: `I built and ran the software and the research behind it, a cohort of committed early adopters using their car as a home battery, powering the house at peak times and recharging when energy is cheaper and greener. Making that idea legible to an ordinary person was the hard part. The vision was the founder's. The software that ran it was mine. Publicly documented by Indra, 200+ bidirectional chargers in UK homes.`,
+      figure: {
+        imgs: [img('indra-14.jpg', "Bidirectional charging at the industry's biggest show")],
+        caption: `Bidirectional charging, front of house at the industry's biggest show.`,
+      },
     },
     {
-      title: "The charger's status lights",
-      body: 'A new charger arrived with a ring of lights that mostly existed because a competitor had one. The team fondly called it "unicorn vomit". I turned it into a language, a standard set of light sequences that tell you what the charger is actually doing, animated properly and signed off across the business, built inside real firmware constraints.',
+      body: `I co-ran moving thousands of customers off the third-party platform we had been renting onto our own, and made it scale and hold.`,
+    },
+    {
+      body: `A new charger arrived with a ring of lights that mostly existed because a competitor had one. The team fondly called it unicorn vomit. I turned it into a language, a standard set of light sequences that tell you what the charger is actually doing, animated properly and signed off across the business, built inside real firmware constraints.`,
     },
   ],
-  throughLine:
-    'I did all of this with a team and the tools of the time. It is the clearest example I have of how I like to work. Find the real problem, make the case for it, and build the thing that moves the business, not just the thing I was asked for. I build the same way now, with AI in the mix. The tools have changed. The approach has not.',
 };
 
 const powernaut: CaseStudy = {
   slug: 'powernaut',
   name: 'Powernaut',
-  kind: 'Early-stage energy software',
+  kind: 'Energy software',
   period: 'Current role',
-  oneLiner: 'I took a company chasing every market and narrowed it to one it could win.',
-  lede: 'I came in as a contract designer and built the product function out of it. I made the first product call, led the company strategy the investors now back, and built the product strategy and the team beneath it.',
-  summary:
-    'First product hire. I took a company chasing every market and narrowed it to one it could win, and built the product function to make it real.',
+  roleTitle: 'Head of Product & Design',
+  oneLiner: `I narrowed a company chasing every market to the one it could win.`,
+  standfirst: `I joined Powernaut on a three-day-a-week UX contract and within a month I was running the product function and advising on a business pivot. Embedded new ways of working that deliver real customer value and led the strategy the investors backed.`,
+  summary: `First product hire. I took a company chasing every market and narrowed it to one it could win, and built the product function to make it real.`,
   tags: ['26 interviews, 9 countries', 'one strategy the business runs on', 'investor-backed direction'],
-  outcomes: [
-    { value: '26', label: 'Interviews across 9 countries in 5 weeks, against an investor deadline' },
-    { value: 'one shape', label: 'The company strategy, simple enough to sketch in 30 seconds' },
-    { value: 'investor-backed', label: 'The direction the business now runs and raises on' },
+  whatIBuilt: [
+    "A 26-interview research programme across nine countries that produced the company's new direction",
+    'The product strategy, one shape the whole business works from',
+    'An operating model where one merged team ships customer-visible value every cycle',
+    'An AI-native design system that holds quality without a designer in every cycle',
+    'Three missing platform insight layers, shipped, one now a selling point in live demos',
   ],
   beats: [
     {
-      n: '01',
       title: 'The way in',
-      subhead:
-        'I came in as a contract designer to add capacity. Within weeks it was five days, then Head of Design and Head of Product.',
+      subhead: `The job was delivery capacity. The role it turned into did not exist before I arrived.`,
       body: [
-        'I was brought in as a UX designer, three days a week, to help with delivery capacity. Nothing more grand than that. There was no product function and no plan for one.',
-        'It moved fast. After a couple of weeks they asked me to go to five days. A couple of weeks after that the conversation had changed again, to an equity share and taking on Head of Design and Head of Product. The role kept growing because the value did, not because anyone set out to hand it over.',
-        'What pulled me in were the questions nobody was asking, about what we should build and why. I kept picking them up, and at some point the founder said the quiet part out loud, that product should be mine to own. I built the function from there.',
+        `I came in to take design work off a team that had too much of it. There was no product team and no plan for one. Within a couple of weeks they asked me to go to five days. A few weeks after that we agreed an equity share, and I took on design and product.`,
+        `The questions that mattered, what we should build and why, had no owner, so I started answering them. A few months in the founder handed the rest over, and I have run product since.`,
       ],
-      quote: {
-        text: 'I feel like this should be you.',
-        attrib: 'The founder, handing over product.',
-      },
     },
     {
-      n: '02',
       title: 'The first product call',
-      subhead:
-        'A small team stretched across five customers pulling in opposite directions. My first call was to back one side and let the other go.',
+      subhead: `Five customers, two directions, one small team. My first call was where to focus our efforts.`,
       body: [
-        'It was not that nothing was working. We had five customers. Two were on a platform we were actively building for, paying, growing and asking for more, the kind of pull you want. The other three were pilots pulling the other way. They wanted features we had no realistic way to build at our scale, and as pilots they came with no promise of ever turning into full rollouts. One small team could not serve both without doing both badly.',
-        'So I made the call to choose. I backed the customers who were active, paying and asking to go deeper, and let go of the pilots that were soaking up real effort in a space that would not show value or traction any time soon. Walking away from live customers looks like losing ground. In practice it was the opposite. It put a stretched team on the one place we were genuinely winning, and it set everything that followed.',
+        `The team were drowning in work and fighting on multiple fronts. Two of our customers were paying and growing. The other three were pilots, asking for features we had no realistic way of building, with no promise of ever turning into rollouts. With the team we had we could not serve both.`,
+        `The numbers said the same thing about the pilots. Fewer than one in fifty of the end customers we needed were signing up, fewer than half the sites were profitable, customer service was killing us, and the rollout target the work was meant to unlock was out of reach.`,
+        `So I chose. We doubled down on the two that were pulling us forward and finished the other three's pilots properly, final reports, forecast against realised savings and happy customers. We left that market with our reputation and relationships intact. It allowed a stretched team to focus on the one place we had traction, and it set up everything that followed.`,
       ],
     },
     {
-      n: '03',
       title: 'Validating it, and hitting the ceiling',
-      subhead:
-        'The market we backed had a ceiling. Better to find that in research than in the numbers a year later.',
+      subhead: `I argued us onto that market. Then my own research talked the company back out of betting everything on it.`,
       body: [
-        'Backing a market is a bet, so I set out to test it properly rather than assume. As we dug in, an uncomfortable thing surfaced. The market we had chosen might not be big enough on its own, and the options around it were thinner than we had hoped.',
-        'That is why we went wider. I led a research programme, run by a working group I pulled together from across the business, the founders and the heads of marketing and procurement among them. We narrowed thousands of contacts to the right 26, across 9 countries, on discussion guides I wrote. The rule throughout was simple. Interest is not demand. A warm word proves nothing, so we pushed every conversation to a real purchasing signal, what someone would actually pay for and when.',
-      ],
-      quote: {
-        text: 'Interest is not demand.',
-        attrib: 'The rule that ran the whole programme. 26 conversations, 9 countries, every one pushed past a polite yes to a real signal.',
-      },
-    },
-    {
-      n: '04',
-      title: 'The company strategy I led',
-      subhead: 'I reduced the whole company to one shape, and the investors backed it as our direction.',
-      body: [
-        'Out of that work I led the organisational strategy, and I reduced it to a single shape. One shared layer of data, the markets it serves on top of it, and the insight that turns that data into value above them. One picture that is the product architecture, the go-to-market story, the business model and the anchor we hire and plan against. My test for it is blunt. If you cannot sketch it in 30 seconds with a marker, it is not doing its job.',
-        'I held it firmly but not preciously. I was on calls with investors sanity-checking the direction, and when the founders stress-tested the shape I held the parts that mattered and gave ground on the detail where they were right. The investors, who had been pushing for a clearer direction, backed it as the company’s focus.',
-        'That is not a claim, it is how the business now runs. Marketing takes its positioning, its messaging, the companies we go after and how we talk to them straight from it. Business development uses it to work out which customers to chase. A forward-deployed engineering initiative, now a real part of how we land and serve customers, came directly off the back of it. Commercial, marketing, sales and the fundraise are all working from the same page, and that page is the strategy.',
+        `A market you have chosen is still a guess, so I built the research to test the bet properly. It came back against me. The market was consolidating, the bigger players were building their own tools in house, and the pool of right-sized customers left over was too small to carry a venture-scale company.`,
+        `So I made the case against the direction I had sold weeks earlier. Not to abandon the market, the customers we had there stayed and mattered, but to stop treating it as the only bet. We re-pointed the effort before it burnt runway, and turned the same research engine onto the bigger question of where this company could actually win.`,
       ],
     },
     {
-      n: '05',
-      title: 'The product strategy I built off it',
-      subhead:
-        'The company strategy set the direction for the business. The product strategy made it real at the level of the product.',
+      title: 'Finding the direction',
+      subhead: `The company needed a direction it could defend to investors. I built the programme that went and found it.`,
       body: [
-        'A direction the whole business can draw is a good place to start, but it works at the altitude of the company, which market and why. It does not tell you what to build on Monday. So once the company strategy had landed and the investors were behind it, I built the product strategy underneath it. A more granular layer, aligned to the product itself rather than the business as a whole.',
-        'It takes the same shape the business decides from and turns it into themes and priorities, the what and the when, a sequence of things to build that each ladder back to the direction. That is what keeps the two honest with each other. One sets the direction. The other walks the path to it, and together they close the loop from a line on a whiteboard to the thing a customer uses.',
+        `I pulled together a working group, the founders and the heads of marketing and procurement in it, and stood up a five-week research programme against an investor deadline. I wrote the discussion guides and ran the interviews, 540 outreach messages narrowed to 26 conversations across nine countries.`,
+        `The standing rule was that interest is not demand, so every conversation got pushed to what someone would actually pay for and when. The rule held even when it flattered us. A buyer told us they would buy it tomorrow, and it still counted as one signal, not proof, because their own plans pointed the other way.`,
+        `What came back was a thesis. The tools this industry runs on were built for a few large assets, coordinated by people on calls and in spreadsheets. As assets get smaller, which is the space we operate in, the coordination work stays the same size. So below a certain point the overhead eats the value and the work does not get done.`,
+        `The thesis, and the customer it defines, became the company strategy. I wrote it, the founders made their adjustments and took it to the investors, who had been pushing for a clearer direction. They backed it.`,
+      ],
+      quote: { text: `Interest is not demand.`, note: `The rule that ran the whole programme.` },
+    },
+    {
+      title: 'The product strategy, in one shape',
+      subhead: `Strategy at company altitude does not tell a team what to build on Monday. This is the layer that does, and it is mine.`,
+      body: [
+        `Underneath the company strategy I built the product strategy, and I reduced it to a single shape. One shared layer of data, the three stages of the operation it serves, and the insight on top that makes the whole thing legible. In our customers' worlds those stages run separately, every handover is manual, and the numbers degrade at each boundary. The shape is what joins them back up.`,
+        `One object doing four jobs. My test for it is blunt. If you cannot sketch it in thirty seconds with a marker, it is not doing its job. And it gives the whole company something to say no with.`,
+        `It did not stay a product artefact. Marketing writes positioning and messaging from the shape. Business development picks which customers to chase off the back of it, and I work that edge with them weekly, who is in, who is out, what we should charge. A forward-deployed engineering initiative rolled out from the same picture. The whole business runs from one page, and that page is the strategy.`,
       ],
     },
     {
-      n: '06',
       title: 'The work customers point at',
-      subhead:
-        'Strategy earns its keep when it ships. Alongside all of it, the team kept shipping work customers could see and use.',
+      subhead: `Strategy earns its keep when it ships. Alongside all of it, the team kept putting work in front of customers.`,
       body: [
-        'None of the strategy work meant the product stood still. Alongside it the team kept building, and the cycles now mapped to the direction rather than wandering off it. The result was work customers could see and use, not just architecture underneath.',
-        'Two examples. A health-monitoring layer that gives customers a live read on how their sites are performing, and that became a genuine selling point in demos. And self-serve, so customers can find answers and do more on their own rather than coming to us for everything. Small, concrete things, shipped steadily, each one connected back to the strategy.',
+        `None of the strategy work meant the product stood still. The research had shown three insight layers missing from the platform, so we built all three. Health monitoring gives customers a live read on how their sites are performing. They check it daily, and it became a selling point in demos. Visibility of platform actions lets customers find answers on their own, and the support load dropped with it. The third surfaces the value the platform has created, something real to stand on at renewal.`,
+        `One customer liked a demo enough to tell us to quote them on our own website. When we asked why they had chosen us, the answer was the visibility and control.`,
       ],
+      quote: { text: `Something we've not had before.`, attrib: 'A Powernaut customer' },
     },
   ],
+  depthHeading: 'More of what I built at Powernaut',
   depth: [
     {
-      title: 'How the team decides and ships',
-      body: 'None of the operating model existed when I arrived. Work now starts from a short problem brief, the problem and the why, so the team owns the how. I set up how we manage the backlog and the different shapes of work that move through it, so the right kind of thinking goes into the right kind of problem. And I built UX and UI into shaping the problem rather than painting over it at the end. The point is a team that owns the problem, not just the tasks.',
+      body: `None of it existed when I arrived, and it runs on one idea. Hand the team the problem, not the solution. Work starts from a short problem brief, and if the brief is long I have smuggled a solution into it. Product, engineering and delivery run as one team, and the bar at the far end is firm. Done means adopted, not deployed.`,
     },
     {
-      title: 'The AI-native design system',
-      body: 'A design system built to keep quality and consistency high without a designer sitting in every cycle. It means a small team ships a coherent, considered product far faster than its size would suggest.',
+      body: `AI runs through the day-to-day, the research, the design work and the routine operational load, so a small team moves like a bigger one. It is the medium I build in now, and the most energised I have felt about work in years.`,
+    },
+    {
+      body: `Design capacity was one external designer, about a day a week, and when we could not keep her I was not willing to lose the quality she brought. The design system is the answer, a single source of truth in the codebase with guardrails that keep AI-produced work on brand. It is why a team this size ships a coherent, considered product at the pace it does.`,
+    },
+    {
+      body: `Most teams only answer the first AI question, how the team uses it to work. I owned the second, how it operates inside the platform. Customer first, visible, real product impact, and no slop, with agents inside the workflows rather than a chat bolted on top. The clearest bet was exposing the platform through an MCP server so agents can work directly against it. A light-touch build, but the pull from customers and the team was out of all proportion to its size.`,
     },
   ],
-  throughLine:
-    'This is the same way I worked at Indra, present tense, with the headline moved. There it was influence and hard commercial outcomes. Here it is judgment, deciding what to build and why, and getting a whole business behind one direction. I build with AI woven through all of it now, the research, the design system, the day-to-day. The tools have moved on. The way I work has not. Find the real problem, make the case for it, and build the thing that moves the business, not just the thing I was asked for.',
 };
 
-export const caseStudies: CaseStudy[] = [powernaut, indra];
+export const caseStudies: CaseStudy[] = [indra, powernaut];
 export const caseStudyBySlug = (slug: string) => caseStudies.find((c) => c.slug === slug);

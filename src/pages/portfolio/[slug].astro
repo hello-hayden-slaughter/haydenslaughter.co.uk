@@ -1,0 +1,339 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SiteNav from '../../components/SiteNav.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { caseStudies, type Figure } from '../../data/caseStudies';
+
+export function getStaticPaths() {
+  return caseStudies.map((cs) => ({ params: { slug: cs.slug }, props: { cs } }));
+}
+
+const { cs } = Astro.props;
+---
+
+<BaseLayout title={`${cs.name} — Hayden Slaughter`} description={cs.oneLiner}>
+  <SiteNav />
+
+  <main>
+    <header class="cs-head">
+      <div class="container">
+        <p class="eyebrow"><a href="/portfolio" class="cs-back">← Portfolio</a></p>
+        <p class="cs-kind">{cs.roleTitle} · {cs.name} · {cs.kind} · {cs.period}</p>
+        <h1 class="cs-oneliner">{cs.oneLiner}</h1>
+        <p class="cs-standfirst measure">{cs.standfirst}</p>
+        <a class="dl" href="/Hayden-Slaughter-Portfolio.pdf" download>
+          <span class="dl__icon">↓</span> Download portfolio (PDF)
+        </a>
+      </div>
+    </header>
+
+    {
+      cs.hero && (
+        <div class="container cs-hero">
+          <img src={cs.hero.src} alt={cs.hero.alt} />
+        </div>
+      )
+    }
+
+    <div class="container cs-body">
+      <section class="whatibuilt">
+        <p class="eyebrow">What I built</p>
+        <ul>
+          {cs.whatIBuilt.map((w) => <li>{w}</li>)}
+        </ul>
+      </section>
+
+      {
+        cs.beats.map((beat, i) => (
+          <section class="beat">
+            <div class="beat__head">
+              <span class="beat__n">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h2 class="beat__title">{beat.title}</h2>
+                <p class="beat__subhead">{beat.subhead}</p>
+              </div>
+            </div>
+            <div class="beat__body measure">
+              {beat.body.map((p) => (
+                <p>{p}</p>
+              ))}
+            </div>
+            {beat.quote && (
+              <figure class="pull">
+                <blockquote>{beat.quote.text}</blockquote>
+                {beat.quote.attrib && <figcaption>{beat.quote.attrib}</figcaption>}
+                {beat.quote.note && <p class="pull__note">{beat.quote.note}</p>}
+              </figure>
+            )}
+            {beat.figures?.map((fig: Figure) => (
+              <figure class="figure">
+                <div class={`figure__imgs figure__imgs--${fig.imgs.length}`}>
+                  {fig.imgs.map((im) => (
+                    <img src={im.src} alt={im.alt} loading="lazy" decoding="async" />
+                  ))}
+                </div>
+                {fig.caption && <figcaption>{fig.caption}</figcaption>}
+              </figure>
+            ))}
+          </section>
+        ))
+      }
+
+      {
+        cs.depth && cs.depth.length > 0 && (
+          <section class="depth">
+            <h2 class="depth__title">{cs.depthHeading}</h2>
+            <div class="depth__list">
+              {cs.depth.map((d) => (
+                <div class="depth__item">
+                  {d.figure && (
+                    <figure class="figure">
+                      <div class={`figure__imgs figure__imgs--${d.figure.imgs.length}`}>
+                        {d.figure.imgs.map((im) => (
+                          <img src={im.src} alt={im.alt} loading="lazy" decoding="async" />
+                        ))}
+                      </div>
+                      {d.figure.caption && <figcaption>{d.figure.caption}</figcaption>}
+                    </figure>
+                  )}
+                  <p class="measure">{d.body}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <nav class="cs-next">
+        <a href="/portfolio">← Portfolio</a>
+        <a href="/">The CV →</a>
+      </nav>
+    </div>
+  </main>
+
+  <SiteFooter />
+
+  <style>
+    .cs-head {
+      background: var(--ink);
+      color: var(--paper);
+      padding-block: var(--space-7) var(--space-5);
+    }
+    .cs-back {
+      color: var(--mint);
+      text-decoration: none;
+    }
+    .cs-kind {
+      margin: 8px 0 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      color: var(--grey-1);
+    }
+    .cs-oneliner {
+      margin: 18px 0 0;
+      color: var(--paper);
+      max-width: 22ch;
+      font-size: clamp(28px, 4.8vw, 46px);
+    }
+    .cs-standfirst {
+      margin: 20px 0 0;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--grey-1);
+    }
+    .dl {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: var(--space-3);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--ink);
+      background: var(--mint);
+      border: 2px solid var(--mint);
+      padding: 10px 16px;
+      text-decoration: none;
+    }
+    .dl:hover {
+      background: var(--paper);
+      border-color: var(--paper);
+      color: var(--ink);
+    }
+
+    .cs-hero {
+      margin-top: var(--space-5);
+    }
+    .cs-hero img {
+      width: 100%;
+      border: var(--border);
+      box-shadow: var(--shadow-hard);
+    }
+
+    .cs-body {
+      padding-block: var(--space-5) var(--space-5);
+    }
+    .whatibuilt {
+      border: var(--border);
+      background: var(--surface-card);
+      box-shadow: var(--shadow-hard);
+      padding: 28px 30px;
+    }
+    .whatibuilt ul {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+    .whatibuilt li {
+      position: relative;
+      padding-left: 22px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .whatibuilt li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 8px;
+      height: 8px;
+      background: var(--teal);
+    }
+
+    .beat {
+      padding: var(--space-5) 0;
+      border-top: var(--rule-dotted);
+      margin-top: var(--space-5);
+    }
+    .beat:first-of-type {
+      border-top: none;
+    }
+    .beat__head {
+      display: flex;
+      gap: 20px;
+      align-items: baseline;
+      margin-bottom: var(--space-2);
+    }
+    .beat__n {
+      font-family: var(--font-label);
+      font-size: 24px;
+      color: var(--teal);
+      flex: none;
+    }
+    .beat__title {
+      margin: 0;
+      font-size: clamp(24px, 3.5vw, 32px);
+    }
+    .beat__subhead {
+      margin: 8px 0 0;
+      font-size: 17px;
+      line-height: 1.5;
+      color: var(--grey-3);
+      font-weight: 600;
+    }
+    .beat__body p {
+      margin: 0 0 14px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .figure {
+      margin: var(--space-3) 0 0;
+    }
+    .figure__imgs {
+      display: grid;
+      gap: 12px;
+    }
+    .figure__imgs--2 {
+      grid-template-columns: 1fr 1fr;
+    }
+    .figure img {
+      width: 100%;
+      border: var(--border);
+      box-shadow: var(--shadow-hard-sm);
+      background: var(--canvas);
+    }
+    .figure figcaption {
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--grey-2);
+    }
+
+    .pull {
+      margin: var(--space-3) 0 0;
+      border-left: 4px solid var(--teal);
+      padding: 6px 0 6px 20px;
+      max-width: 48ch;
+    }
+    .pull blockquote {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 24px;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .pull figcaption {
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--grey-2);
+    }
+    .pull__note {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--grey-3);
+    }
+
+    .depth {
+      padding: var(--space-5) 0 0;
+      border-top: var(--border);
+      margin-top: var(--space-5);
+    }
+    .depth__title {
+      margin: 0 0 var(--space-3);
+      font-size: 24px;
+    }
+    .depth__list {
+      display: grid;
+      gap: var(--space-5);
+    }
+    .depth__item p {
+      margin: 0;
+      font-size: 15.5px;
+      line-height: 1.7;
+      color: var(--grey-4);
+    }
+    .depth__item .figure {
+      margin-bottom: 16px;
+    }
+
+    .cs-next {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-2);
+      margin-top: var(--space-7);
+      padding-top: var(--space-3);
+      border-top: var(--rule-dotted);
+      flex-wrap: wrap;
+    }
+    .cs-next a {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    @media (max-width: 640px) {
+      .figure__imgs--2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</BaseLayout>

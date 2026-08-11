@@ -19,10 +19,9 @@ export const site = {
 } as const;
 
 export const nav = [
-  { label: 'Work', href: '/work' },
-  { label: 'How I work', href: '/#how-i-work' },
-  { label: 'CV', href: '/cv' },
-  { label: 'Contact', href: 'mailto:hello@haydenslaughter.co.uk' },
+  { label: 'CV', href: '/' },
+  { label: 'Portfolio', href: '/portfolio' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const hero = {
