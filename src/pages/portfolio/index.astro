@@ -112,6 +112,8 @@ import pnHero from '../../diagrams/powernaut/hero.html?raw';
       object-fit: cover;
     }
     .pcard__media--diagram {
+      /* Square box so the whole loop diagram fits without cropping */
+      aspect-ratio: 1 / 1;
       display: grid;
       place-items: center;
       background: var(--teal);
@@ -122,14 +124,19 @@ import pnHero from '../../diagrams/powernaut/hero.html?raw';
       border: none !important;
       box-shadow: none !important;
       padding: 0 !important;
+      margin: 0 !important;
       width: auto !important;
+      height: 100% !important;
       max-width: 100%;
+      display: grid !important;
+      place-items: center;
     }
     .pcard__media--diagram :global(svg) {
-      max-width: 100%;
-      max-height: 100%;
-      width: auto;
-      height: auto;
+      width: auto !important;
+      height: 100% !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      margin: 0 !important;
       display: block;
     }
     .pcard__body {
