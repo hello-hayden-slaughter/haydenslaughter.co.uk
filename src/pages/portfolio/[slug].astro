@@ -568,7 +568,10 @@ for (const src of gridSrcs) arMap[src] = await aspectRatio(src);
         flex-direction: column;
       }
       .fig__cell {
-        flex: 0 0 auto; /* stack full-width, natural height */
+        /* !important beats the inline `flex:<ratio> 1 0` from the justified row —
+           otherwise flex-basis:0 collapses each stacked cell to nothing. */
+        flex: 0 0 auto !important;
+        width: 100%;
       }
       .fig__pq {
         grid-template-columns: 1fr;
