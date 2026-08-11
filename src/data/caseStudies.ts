@@ -9,15 +9,29 @@
 export interface Img {
   src: string;
   alt: string;
-}
-export interface Figure {
-  imgs: Img[];
-  caption?: string;
+  /** cover = cropped to fill (default in grids); contain = whole image, letterboxed; natural = intrinsic aspect. */
+  fit?: 'cover' | 'contain' | 'natural';
+  /** Cell background (used behind contained diagrams). */
+  bg?: string;
 }
 export interface Quote {
   text: string;
   attrib?: string;
   note?: string;
+}
+export interface Figure {
+  /**
+   * band = full-width fixed-height cover strip (hero).
+   * grid = equal-height cover images side by side in one bordered box.
+   * frame = image shown whole on a padded light background (diagrams, screens, portraits).
+   * photo-quote = a cover photo beside a pull-quote in one bordered box.
+   */
+  layout: 'band' | 'grid' | 'frame' | 'photo-quote';
+  imgs: Img[];
+  /** grid-template-columns for grid / photo-quote layouts. */
+  cols?: string;
+  caption?: string;
+  quote?: Quote;
 }
 export interface Beat {
   title: string;
@@ -28,7 +42,8 @@ export interface Beat {
 }
 export interface DepthItem {
   body: string;
-  figure?: Figure;
+  /** Optional 4:3 cover image, rendered as a card with the text below. */
+  image?: Img;
 }
 export interface CaseStudy {
   slug: string;
@@ -48,7 +63,12 @@ export interface CaseStudy {
   depth?: DepthItem[];
 }
 
-const img = (n: string, alt: string): Img => ({ src: `/portfolio/img/${n}`, alt });
+const img = (n: string, alt: string, fit?: Img['fit'], bg?: string): Img => ({
+  src: `/portfolio/img/${n}`,
+  alt,
+  ...(fit ? { fit } : {}),
+  ...(bg ? { bg } : {}),
+});
 
 const indra: CaseStudy = {
   slug: 'indra',
@@ -79,6 +99,8 @@ const indra: CaseStudy = {
       ],
       figures: [
         {
+          layout: 'grid',
+          cols: '1fr 1fr',
           imgs: [
             img('indra-2.jpg', 'The kick-off FigJam board'),
             img('indra-3.jpg', 'The mental-model work'),
@@ -94,12 +116,18 @@ const indra: CaseStudy = {
         `At Indra, sales were in decline and targets were consistently being missed. Installers were unhappy with our product, but no one could put a finger on exactly why. I formed a small team to investigate and understand what was happening.`,
         `What we uncovered was uncomfortable. The installers who fit our chargers, the tradespeople on the tools every day, hated fitting ours. They were complicated, fiddly and took an excessive amount of time to commission. So when a customer asked for a recommendation, they pointed them at a competitor that was easier and quicker to put on the wall. The people we relied on to fit and promote our product were quietly sending business elsewhere, and nobody had traced it back.`,
       ],
-      figures: [{ imgs: [img('indra-4.jpg', 'An installer fitting an Indra charger')] }],
-      quote: {
-        text: `Indra are the most complex to commission due to the connectivity.`,
-        attrib: 'Installer, field research',
-        note: `What the research kept hearing, in the trade's own words.`,
-      },
+      figures: [
+        {
+          layout: 'photo-quote',
+          cols: '0.55fr 1fr',
+          imgs: [img('indra-4.jpg', 'An installer fitting an Indra charger')],
+          quote: {
+            text: `Indra are the most complex to commission due to the connectivity.`,
+            attrib: 'Installer, field research',
+            note: `What the research kept hearing, in the trade's own words.`,
+          },
+        },
+      ],
     },
     {
       title: 'Making the case upstairs',
@@ -109,7 +137,8 @@ const indra: CaseStudy = {
       ],
       figures: [
         {
-          imgs: [img('indra-5.jpg', 'The installer commissioning journey, mapped end to end')],
+          layout: 'frame',
+          imgs: [img('indra-5.jpg', 'The installer commissioning journey, mapped end to end', 'natural')],
           caption: `The commissioning journey, mapped end to end. Part of the evidence that carried the case.`,
         },
       ],
@@ -124,6 +153,8 @@ const indra: CaseStudy = {
       ],
       figures: [
         {
+          layout: 'grid',
+          cols: '0.75fr 1fr',
           imgs: [
             img('indra-6.jpg', 'Installers fitting a charger on site'),
             img('indra-7.jpg', 'On site with installers at the chargers'),
@@ -141,11 +172,13 @@ const indra: CaseStudy = {
       ],
       figures: [
         {
-          imgs: [img('indra-8.jpg', 'The customer app home, charging and boost screens')],
+          layout: 'frame',
+          imgs: [img('indra-8.jpg', 'The customer app home, charging and boost screens', 'natural')],
           caption: `The customer app. Charging status, scheduling and cost, simple enough to check at a glance.`,
         },
         {
-          imgs: [img('indra-9.jpg', 'Collecting the award with the team')],
+          layout: 'frame',
+          imgs: [img('indra-9.jpg', 'Collecting the award with the team', 'natural')],
           caption: `Best Use of Technology & Trends, Herefordshire & Worcestershire Chamber of Commerce Business Awards 2024, collected with the team.`,
         },
       ],
@@ -159,8 +192,10 @@ const indra: CaseStudy = {
       ],
       figures: [
         {
+          layout: 'grid',
+          cols: '1fr 1fr',
           imgs: [
-            img('indra-10.jpg', 'The discover, define, build process the function ran on'),
+            img('indra-10.jpg', 'The discover, define, build process the function ran on', 'contain', '#F4F7F6'),
             img('indra-11.jpg', 'The numbers the function kept producing'),
           ],
           caption: `The process the function ran on, and the numbers it kept producing.`,
@@ -176,7 +211,8 @@ const indra: CaseStudy = {
       ],
       figures: [
         {
-          imgs: [img('indra-12.jpg', 'The team together')],
+          layout: 'frame',
+          imgs: [img('indra-12.jpg', 'The team together', 'natural')],
           caption: `The team that kept shipping.`,
         },
       ],
@@ -185,24 +221,18 @@ const indra: CaseStudy = {
   depthHeading: 'More of what I built at Indra',
   depth: [
     {
-      body: `The tool the whole business ran on, support agents and installers alike, rebuilt around how those people actually worked and around customers who increasingly wanted to help themselves. Page loads went from 58 seconds to 1, a core search from around 5 seconds to under 1, with full test coverage on the critical path. It scaled to a fleet of more than 130,000 commissioned chargers.`,
-      figure: {
-        imgs: [img('indra-13.jpg', 'DynaMO, the operations platform')],
-        caption: `DynaMO, the operations platform the fleet ran on.`,
-      },
+      body: `DynaMO, the operations platform the fleet ran on. The tool the whole business ran on, support agents and installers alike, rebuilt around how those people actually worked and around customers who increasingly wanted to help themselves. Page loads went from 58 seconds to 1, a core search from around 5 seconds to under 1, with full test coverage on the critical path. It scaled to a fleet of more than 130,000 commissioned chargers.`,
+      image: img('indra-13.jpg', 'DynaMO, the operations platform'),
     },
     {
-      body: `I built and ran the software and the research behind it, a cohort of committed early adopters using their car as a home battery, powering the house at peak times and recharging when energy is cheaper and greener. Making that idea legible to an ordinary person was the hard part. The vision was the founder's. The software that ran it was mine. Publicly documented by Indra, 200+ bidirectional chargers in UK homes.`,
-      figure: {
-        imgs: [img('indra-14.jpg', "Bidirectional charging at the industry's biggest show")],
-        caption: `Bidirectional charging, front of house at the industry's biggest show.`,
-      },
+      body: `Bidirectional charging, the world's largest vehicle-to-home trial. I built and ran the software and the research behind it, a cohort of committed early adopters using their car as a home battery, powering the house at peak times and recharging when energy is cheaper and greener. The vision was the founder's. The software that ran it was mine. Publicly documented by Indra, 200+ bidirectional chargers in UK homes.`,
+      image: img('indra-14.jpg', "Bidirectional charging at the industry's biggest show"),
     },
     {
-      body: `I co-ran moving thousands of customers off the third-party platform we had been renting onto our own, and made it scale and hold.`,
+      body: `The platform migration. I co-ran moving thousands of customers off the third-party platform we had been renting onto our own, and made it scale and hold.`,
     },
     {
-      body: `A new charger arrived with a ring of lights that mostly existed because a competitor had one. The team fondly called it unicorn vomit. I turned it into a language, a standard set of light sequences that tell you what the charger is actually doing, animated properly and signed off across the business, built inside real firmware constraints.`,
+      body: `The charger's status lights. A new charger arrived with a ring of lights that mostly existed because a competitor had one. The team fondly called it unicorn vomit. I turned it into a language, a standard set of light sequences that tell you what the charger is actually doing, animated properly and signed off across the business, built inside real firmware constraints.`,
     },
   ],
 };

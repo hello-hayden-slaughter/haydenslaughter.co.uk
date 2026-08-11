@@ -11,65 +11,65 @@ import { cv } from '../data/cv';
 >
   <SiteNav />
 
-  <main class="page">
-    <div class="toolbar">
-      <a class="dl" href="/Hayden-Slaughter-CV.pdf" download>
-        <span class="dl__icon">↓</span> Download CV (PDF)
-      </a>
-    </div>
-
-    <article class="sheet">
-      <header class="sheet__head">
-        <div class="sheet__kicker">
-          <span>{cv.kicker}</span>
-          <span class="sheet__tag">NORMAL.CV</span>
-        </div>
-        <h1>{cv.name}</h1>
-        <p class="sheet__contact">
+  <main>
+    <header class="cv-head">
+      <div class="container">
+        <p class="cv-kicker">{cv.kicker}</p>
+        <h1 class="cv-name">{cv.name}</h1>
+        <p class="cv-contact">
           {cv.contact.location}
           <span class="dot">·</span>
           <a href={`mailto:${cv.contact.email}`}>{cv.contact.email}</a>
           <span class="dot">·</span>
           <a href={cv.contact.linkedin.href}>{cv.contact.linkedin.label}</a>
         </p>
-        <p class="sheet__summary">{cv.summary}</p>
-      </header>
+        <p class="cv-summary measure">{cv.summary}</p>
+        <a class="dl" href="/Hayden-Slaughter-CV.pdf" download>
+          <span class="dl__icon">↓</span> Download CV (PDF)
+        </a>
+      </div>
+    </header>
 
-      <section class="sheet__body">
-        <p class="sheet__label">EXPERIENCE</p>
-        {
-          cv.experience.map((role) => (
-            <div class="role">
-              <div class="role__meta">
-                <span class="role__period">{role.period}</span>
-                {role.meta.map((m) => (
-                  <span class="role__metaline">{m}</span>
-                ))}
+    <div class="container cv-body">
+      <section class="block">
+        <p class="eyebrow">Experience</p>
+        <div class="roles">
+          {
+            cv.experience.map((role) => (
+              <div class="role">
+                <div class="role__meta">
+                  <span class="role__period">{role.period}</span>
+                  {role.meta.map((m) => (
+                    <span class="role__metaline">{m}</span>
+                  ))}
+                </div>
+                <div class="role__main">
+                  <h2>
+                    {role.role}
+                    {role.org && <span class="role__org"> · {role.org}</span>}
+                  </h2>
+                  {role.blurb && <p class="role__blurb">{role.blurb}</p>}
+                  {role.bullets && (
+                    <ul class="role__bullets">
+                      {role.bullets.map((b) => (
+                        <li>
+                          <span class="bullet" />
+                          <span set:html={b} />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </div>
-              <div class="role__main">
-                <h2>
-                  {role.role}
-                  {role.org && <span class="role__org"> · {role.org}</span>}
-                </h2>
-                {role.blurb && <p class="role__blurb">{role.blurb}</p>}
-                {role.bullets && (
-                  <ul class="role__bullets">
-                    {role.bullets.map((b) => (
-                      <li>
-                        <span class="bullet" />
-                        <span set:html={b} />
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-          ))
-        }
+            ))
+          }
+        </div>
       </section>
+    </div>
 
-      <section class="sheet__ai">
-        <p class="sheet__label sheet__label--yellow">INDEPENDENT AI PRODUCTS · SHIPPED, PUBLIC</p>
+    <section class="ai-band">
+      <div class="container">
+        <p class="eyebrow eyebrow--yellow">Independent AI products · shipped, public</p>
         <div class="ai-grid">
           {
             cv.aiProducts.map((p) => (
@@ -84,156 +84,126 @@ import { cv } from '../data/cv';
             ))
           }
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="sheet__foot">
-        <p class="sheet__label">SKILLS</p>
+    <div class="container cv-body">
+      <section class="block">
+        <p class="eyebrow">Skills</p>
         <div class="chips">
           {cv.skills.map((s) => <span class="chip">{s}</span>)}
         </div>
-        <div class="two-up">
-          <div>
-            <p class="sheet__label">EDUCATION</p>
-            {
-              cv.education.map((e) => (
-                <p class="edu">
-                  <strong>{e.degree}</strong>
-                  <br />
-                  {e.place}
-                </p>
-              ))
-            }
-          </div>
-          <div>
-            <p class="sheet__label">OUTSIDE WORK</p>
-            <p class="edu">{cv.outsideWork}</p>
-          </div>
+      </section>
+
+      <section class="block two-up">
+        <div>
+          <p class="eyebrow">Education</p>
+          {
+            cv.education.map((e) => (
+              <p class="edu">
+                <strong>{e.degree}</strong>
+                <br />
+                {e.place}
+              </p>
+            ))
+          }
+        </div>
+        <div>
+          <p class="eyebrow">Outside work</p>
+          <p class="edu">{cv.outsideWork}</p>
         </div>
       </section>
-    </article>
+    </div>
   </main>
 
   <SiteFooter />
 
   <style>
-    .page {
-      padding: var(--space-5) var(--space-3) var(--space-7);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: var(--canvas);
+    /* ── Hero (full-width, like the case studies) ───────── */
+    .cv-head {
+      background: var(--ink);
+      color: var(--paper);
+      padding-block: var(--space-7) var(--space-5);
     }
-    .toolbar {
-      width: 790px;
-      max-width: 100%;
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: var(--space-2);
+    .cv-kicker {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      letter-spacing: 0.14em;
+      color: var(--mint);
+    }
+    .cv-name {
+      margin: 16px 0 0;
+      color: var(--paper);
+      font-size: clamp(40px, 7vw, 68px);
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+    }
+    .cv-contact {
+      margin: 16px 0 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.7;
+      color: var(--grey-1);
+    }
+    .cv-contact a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid var(--grey-3);
+    }
+    .cv-contact a:hover {
+      color: var(--mint);
+    }
+    .cv-contact .dot {
+      color: var(--grey-3);
+      padding: 0 4px;
+    }
+    .cv-summary {
+      margin: 24px 0 0;
+      font-size: clamp(17px, 2.2vw, 20px);
+      line-height: 1.6;
+      color: var(--paper);
     }
     .dl {
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      margin-top: var(--space-3);
       font-family: var(--font-display);
       font-weight: 700;
       font-size: 13px;
-      color: var(--paper);
-      background: var(--ink);
-      border: var(--border);
-      box-shadow: var(--shadow-hard-sm);
-      padding: 10px 16px;
+      color: var(--ink);
+      background: var(--mint);
+      border: 2px solid var(--mint);
+      padding: 11px 18px;
       text-decoration: none;
     }
     .dl:hover {
-      background: var(--teal);
-      color: var(--paper);
-    }
-    .dl__icon {
-      font-size: 15px;
-    }
-
-    .sheet {
-      width: 790px;
-      max-width: 100%;
       background: var(--paper);
-      border: var(--border);
-      box-shadow: var(--shadow-hard-lg);
-      box-sizing: border-box;
-    }
-    .sheet__head {
-      padding: 56px 64px 0;
-    }
-    .sheet__kicker {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 16px;
-    }
-    .sheet__kicker > span:first-child {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
+      border-color: var(--paper);
       color: var(--ink);
     }
-    .sheet__tag {
-      font-family: var(--font-label);
-      font-size: 9px;
-      color: var(--red);
-      flex: none;
+
+    /* ── Body ───────────────────────────────────────────── */
+    .cv-body {
+      padding-block: var(--space-5);
     }
-    .sheet__head h1 {
-      margin: 16px 0 0;
-      font-size: 42px;
-      line-height: 0.98;
-      letter-spacing: -0.03em;
+    .block + .block {
+      margin-top: var(--space-7);
     }
-    .sheet__contact {
-      margin: 14px 0 0;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      line-height: 1.7;
-      color: var(--grey-3);
-    }
-    .sheet__contact a {
-      color: inherit;
-      text-decoration: none;
-    }
-    .sheet__contact a:hover {
-      color: var(--red);
-    }
-    .sheet__contact .dot {
-      color: var(--grey-1);
-      padding: 0 2px;
-    }
-    .sheet__summary {
-      margin: 28px 0 0;
-      padding: 2px 0 2px 16px;
-      border-left: 4px solid var(--teal);
-      font-size: 16px;
-      line-height: 1.65;
-      max-width: 66ch;
-    }
-    .sheet__body {
-      padding: 38px 64px 40px;
-    }
-    .sheet__label {
-      margin: 0 0 20px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      color: var(--grey-2);
-    }
-    .sheet__label--yellow {
-      color: var(--yellow);
-      font-family: var(--font-label);
+
+    .roles {
+      margin-top: var(--space-3);
     }
     .role {
-      border-top: 2px solid var(--ink);
-      padding: 22px 0 26px;
       display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: 28px;
+      grid-template-columns: 200px 1fr;
+      gap: 32px;
+      padding: var(--space-5) 0;
+      border-top: var(--border);
+    }
+    .role:first-child {
+      padding-top: var(--space-2);
     }
     .role__meta {
       display: flex;
@@ -246,7 +216,7 @@ import { cv } from '../data/cv';
       font-size: 11px;
       background: var(--ink);
       color: var(--mint);
-      padding: 4px 10px;
+      padding: 5px 10px;
     }
     .role__metaline {
       font-family: var(--font-mono);
@@ -256,7 +226,7 @@ import { cv } from '../data/cv';
     }
     .role__main h2 {
       margin: 0;
-      font-size: 20px;
+      font-size: clamp(20px, 2.6vw, 24px);
       letter-spacing: -0.02em;
       line-height: 1.15;
     }
@@ -264,23 +234,25 @@ import { cv } from '../data/cv';
       color: var(--teal);
     }
     .role__blurb {
-      margin: 12px 0 0;
-      font-size: 15px;
+      margin: 14px 0 0;
+      font-size: 16px;
       line-height: 1.6;
+      max-width: 62ch;
     }
     .role__bullets {
       list-style: none;
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin: 14px 0 0;
+      gap: 10px;
+      margin: 16px 0 0;
+      max-width: 66ch;
     }
     .role__bullets li {
       display: flex;
       gap: 14px;
       align-items: baseline;
-      font-size: 14.5px;
+      font-size: 15px;
       line-height: 1.6;
     }
     .bullet {
@@ -290,19 +262,25 @@ import { cv } from '../data/cv';
       flex: none;
       transform: translateY(-1px);
     }
-    .sheet__ai {
-      padding: 36px 64px 42px;
+
+    /* ── AI band (full-width) ───────────────────────────── */
+    .ai-band {
       background: var(--ink);
       color: var(--paper);
+      padding-block: var(--space-7);
+    }
+    .eyebrow--yellow {
+      color: var(--yellow);
     }
     .ai-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
     }
     .ai-card {
       border: 2px solid var(--paper);
-      padding: 18px 22px;
+      padding: 24px 26px;
     }
     .ai-card__top {
       display: flex;
@@ -312,7 +290,7 @@ import { cv } from '../data/cv';
     .ai-card__name {
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 19px;
+      font-size: 22px;
       letter-spacing: -0.02em;
     }
     .ai-card__status {
@@ -327,63 +305,58 @@ import { cv } from '../data/cv';
       color: var(--grey-1);
     }
     .ai-card__body {
-      margin: 12px 0 0;
-      font-size: 13.5px;
-      line-height: 1.6;
+      margin: 14px 0 0;
+      font-size: 14px;
+      line-height: 1.65;
       color: var(--grey-1);
     }
-    .sheet__foot {
-      padding: 34px 64px 42px;
-    }
+
+    /* ── Skills / education ─────────────────────────────── */
     .chips {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      margin-top: var(--space-3);
     }
     .chip {
       font-family: var(--font-mono);
-      font-size: 11px;
+      font-size: 12px;
       border: var(--border-thin);
-      padding: 4px 10px;
+      padding: 5px 12px;
     }
     .two-up {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      margin: 30px 0 0;
+      gap: 40px;
+    }
+    .two-up .eyebrow {
+      margin-bottom: 12px;
     }
     .edu {
-      margin: 0 0 12px;
-      font-size: 14px;
+      margin: 0 0 14px;
+      font-size: 15px;
       line-height: 1.6;
+      max-width: 46ch;
     }
     .edu strong {
       font-family: var(--font-display);
       font-weight: 700;
     }
 
-    @media (max-width: 640px) {
-      .toolbar {
-        justify-content: stretch;
+    @media (max-width: 680px) {
+      .role {
+        grid-template-columns: 1fr;
+        gap: 14px;
       }
-      .dl {
-        width: 100%;
-        justify-content: center;
+      .role__meta {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
       }
-      .sheet__head,
-      .sheet__body,
-      .sheet__ai,
-      .sheet__foot {
-        padding-left: 24px;
-        padding-right: 24px;
-      }
-      .role,
       .ai-grid,
       .two-up {
         grid-template-columns: 1fr;
-      }
-      .sheet__head h1 {
-        font-size: 34px;
       }
     }
   </style>

@@ -2,11 +2,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteNav from '../../components/SiteNav.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import { caseStudies, type Figure } from '../../data/caseStudies';
+import { caseStudies, type Figure, type Img } from '../../data/caseStudies';
 
-// Powernaut is anonymised / diagram-led. Its figures are self-contained,
-// inline-styled HTML/SVG lifted verbatim from the portfolio source, mapped to
-// the beat they belong to.
+// Powernaut is diagram-led; its figures are inline SVG/HTML lifted from source.
 import pnFig1 from '../../diagrams/powernaut/fig1.html?raw';
 import pnFig2 from '../../diagrams/powernaut/fig2.html?raw';
 import pnFig3 from '../../diagrams/powernaut/fig3.html?raw';
@@ -31,6 +29,12 @@ export function getStaticPaths() {
 const { cs } = Astro.props;
 const diagramsFor = (idx: number): string[] =>
   cs.slug === 'powernaut' ? (powernautDiagrams[idx] ?? []) : [];
+
+const cellStyle = (im: Img) =>
+  [im.bg ? `background:${im.bg}` : '', im.fit ? `object-fit:${im.fit}` : ''].filter(Boolean).join(';');
+
+const depthCards = cs.depth?.filter((d) => d.image) ?? [];
+const depthNotes = cs.depth?.filter((d) => !d.image) ?? [];
 ---
 
 <BaseLayout title={`${cs.name} — Hayden Slaughter`} description={cs.oneLiner}>
@@ -51,8 +55,10 @@ const diagramsFor = (idx: number): string[] =>
 
     {
       cs.hero && (
-        <div class="container cs-hero">
-          <img src={cs.hero.src} alt={cs.hero.alt} />
+        <div class="container cs-hero-wrap">
+          <div class="cs-hero">
+            <img src={cs.hero.src} alt={cs.hero.alt} />
+          </div>
         </div>
       )
     }
@@ -80,6 +86,7 @@ const diagramsFor = (idx: number): string[] =>
                 <p>{p}</p>
               ))}
             </div>
+
             {beat.quote && (
               <figure class="pull">
                 <blockquote>{beat.quote.text}</blockquote>
@@ -87,16 +94,50 @@ const diagramsFor = (idx: number): string[] =>
                 {beat.quote.note && <p class="pull__note">{beat.quote.note}</p>}
               </figure>
             )}
+
             {beat.figures?.map((fig: Figure) => (
-              <figure class="figure">
-                <div class={`figure__imgs figure__imgs--${fig.imgs.length}`}>
-                  {fig.imgs.map((im) => (
-                    <img src={im.src} alt={im.alt} loading="lazy" decoding="async" />
-                  ))}
-                </div>
+              <figure class="fig">
+                {fig.layout === 'band' && (
+                  <div class="fig__band">
+                    <img src={fig.imgs[0].src} alt={fig.imgs[0].alt} loading="lazy" decoding="async" />
+                  </div>
+                )}
+
+                {fig.layout === 'grid' && (
+                  <div class="fig__grid" style={`--cols:${fig.cols ?? '1fr 1fr'}`}>
+                    {fig.imgs.map((im) => (
+                      <div class="fig__cell" style={im.bg ? `background:${im.bg}` : ''}>
+                        <img src={im.src} alt={im.alt} style={cellStyle(im)} loading="lazy" decoding="async" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {fig.layout === 'frame' && (
+                  <div class="fig__frame">
+                    <div class="fig__framepad">
+                      <img src={fig.imgs[0].src} alt={fig.imgs[0].alt} loading="lazy" decoding="async" />
+                    </div>
+                  </div>
+                )}
+
+                {fig.layout === 'photo-quote' && (
+                  <div class="fig__pq" style={`--cols:${fig.cols ?? '0.55fr 1fr'}`}>
+                    <div class="fig__pqimg">
+                      <img src={fig.imgs[0].src} alt={fig.imgs[0].alt} loading="lazy" decoding="async" />
+                    </div>
+                    <blockquote class="fig__pqquote">
+                      <p class="fig__pqtext">{fig.quote?.text}</p>
+                      {fig.quote?.attrib && <p class="fig__pqattrib">{fig.quote.attrib}</p>}
+                      {fig.quote?.note && <p class="fig__pqnote">{fig.quote.note}</p>}
+                    </blockquote>
+                  </div>
+                )}
+
                 {fig.caption && <figcaption>{fig.caption}</figcaption>}
               </figure>
             ))}
+
             {diagramsFor(i).map((d) => <div class="pn-figure" set:html={d} />)}
           </section>
         ))
@@ -106,23 +147,25 @@ const diagramsFor = (idx: number): string[] =>
         cs.depth && cs.depth.length > 0 && (
           <section class="depth">
             <h2 class="depth__title">{cs.depthHeading}</h2>
-            <div class="depth__list">
-              {cs.depth.map((d) => (
-                <div class="depth__item">
-                  {d.figure && (
-                    <figure class="figure">
-                      <div class={`figure__imgs figure__imgs--${d.figure.imgs.length}`}>
-                        {d.figure.imgs.map((im) => (
-                          <img src={im.src} alt={im.alt} loading="lazy" decoding="async" />
-                        ))}
-                      </div>
-                      {d.figure.caption && <figcaption>{d.figure.caption}</figcaption>}
-                    </figure>
-                  )}
+            {depthCards.length > 0 && (
+              <div class="depth__cards">
+                {depthCards.map((d) => (
+                  <div class="dcard">
+                    <div class="dcard__img">
+                      <img src={d.image!.src} alt={d.image!.alt} loading="lazy" decoding="async" />
+                    </div>
+                    <p class="dcard__body">{d.body}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            {depthNotes.length > 0 && (
+              <div class="depth__notes">
+                {depthNotes.map((d) => (
                   <p class="measure">{d.body}</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </section>
         )
       }
@@ -137,6 +180,7 @@ const diagramsFor = (idx: number): string[] =>
   <SiteFooter />
 
   <style>
+    /* ── Header ─────────────────────────────────────────── */
     .cs-head {
       background: var(--ink);
       color: var(--paper);
@@ -185,15 +229,25 @@ const diagramsFor = (idx: number): string[] =>
       color: var(--ink);
     }
 
+    /* ── Hero band (cropped strip, like the source) ─────── */
+    .cs-hero-wrap {
+      margin-top: calc(var(--space-5) * -1);
+    }
     .cs-hero {
-      margin-top: var(--space-5);
+      border: var(--border);
+      box-shadow: var(--shadow-hard);
+      overflow: hidden;
+      aspect-ratio: 21 / 9;
+      background: var(--canvas);
     }
     .cs-hero img {
       width: 100%;
-      border: var(--border);
-      box-shadow: var(--shadow-hard);
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
+    /* ── Body ───────────────────────────────────────────── */
     .cs-body {
       padding-block: var(--space-5) var(--space-5);
     }
@@ -263,23 +317,11 @@ const diagramsFor = (idx: number): string[] =>
       line-height: 1.7;
     }
 
-    .figure {
+    /* ── Figures ────────────────────────────────────────── */
+    .fig {
       margin: var(--space-3) 0 0;
     }
-    .figure__imgs {
-      display: grid;
-      gap: 12px;
-    }
-    .figure__imgs--2 {
-      grid-template-columns: 1fr 1fr;
-    }
-    .figure img {
-      width: 100%;
-      border: var(--border);
-      box-shadow: var(--shadow-hard-sm);
-      background: var(--canvas);
-    }
-    .figure figcaption {
+    .fig figcaption {
       margin-top: 10px;
       font-family: var(--font-mono);
       font-size: 12px;
@@ -287,20 +329,102 @@ const diagramsFor = (idx: number): string[] =>
       color: var(--grey-2);
     }
 
-    /* Embedded Powernaut diagrams (self-contained inline-styled HTML/SVG) */
-    .pn-figure {
-      margin: var(--space-3) 0 0;
-      max-width: 100%;
-      overflow-x: auto;
+    .fig__grid {
+      border: var(--border);
+      box-shadow: var(--shadow-hard);
+      background: var(--paper);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: var(--cols);
+      gap: 12px;
+      height: clamp(220px, 32vw, 360px);
     }
-    .pn-figure :global(figure) {
-      margin: 0;
+    .fig__cell {
+      overflow: hidden;
     }
-    .pn-figure :global(img) {
-      max-width: 100%;
-      height: auto;
+    .fig__cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
+    .fig__frame {
+      border: var(--border);
+      box-shadow: var(--shadow-hard);
+      background: var(--paper);
+    }
+    .fig__framepad {
+      padding: clamp(24px, 4vw, 48px);
+      background: #f1ede2;
+    }
+    .fig__framepad img {
+      width: 100%;
+      display: block;
+    }
+
+    .fig__pq {
+      border: var(--border);
+      box-shadow: var(--shadow-hard);
+      background: var(--paper);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: var(--cols);
+    }
+    .fig__pqimg {
+      overflow: hidden;
+      border-right: var(--border);
+    }
+    .fig__pqimg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      min-height: 220px;
+    }
+    .fig__pqquote {
+      margin: 0;
+      padding: clamp(24px, 3vw, 36px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .fig__pqtext {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(20px, 2.4vw, 26px);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .fig__pqattrib {
+      margin: 14px 0 0;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--grey-2);
+    }
+    .fig__pqnote {
+      margin: 10px 0 0;
+      font-size: 13px;
+      color: var(--grey-3);
+    }
+
+    .fig__band {
+      border: var(--border);
+      box-shadow: var(--shadow-hard);
+      overflow: hidden;
+      aspect-ratio: 21 / 9;
+    }
+    .fig__band img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── Pull-quote (standalone) ────────────────────────── */
     .pull {
       margin: var(--space-3) 0 0;
       border-left: 4px solid var(--teal);
@@ -329,6 +453,21 @@ const diagramsFor = (idx: number): string[] =>
       color: var(--grey-3);
     }
 
+    /* ── Powernaut embedded diagrams ────────────────────── */
+    .pn-figure {
+      margin: var(--space-3) 0 0;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .pn-figure :global(figure) {
+      margin: 0;
+    }
+    .pn-figure :global(img) {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ── Depth ──────────────────────────────────────────── */
     .depth {
       padding: var(--space-5) 0 0;
       border-top: var(--border);
@@ -338,18 +477,46 @@ const diagramsFor = (idx: number): string[] =>
       margin: 0 0 var(--space-3);
       font-size: 24px;
     }
-    .depth__list {
+    .depth__cards {
       display: grid;
-      gap: var(--space-5);
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2);
     }
-    .depth__item p {
+    .dcard {
+      border: var(--border);
+      box-shadow: var(--shadow-hard);
+      background: var(--paper);
+      display: flex;
+      flex-direction: column;
+    }
+    .dcard__img {
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border-bottom: var(--border);
+    }
+    .dcard__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .dcard__body {
+      margin: 0;
+      padding: 22px 24px;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--grey-4);
+    }
+    .depth__notes {
+      margin-top: var(--space-3);
+      display: grid;
+      gap: 16px;
+    }
+    .depth__notes p {
       margin: 0;
       font-size: 15.5px;
       line-height: 1.7;
       color: var(--grey-4);
-    }
-    .depth__item .figure {
-      margin-bottom: 16px;
     }
 
     .cs-next {
@@ -367,8 +534,24 @@ const diagramsFor = (idx: number): string[] =>
       text-decoration: none;
     }
 
-    @media (max-width: 640px) {
-      .figure__imgs--2 {
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 680px) {
+      .fig__grid {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .fig__cell {
+        aspect-ratio: 3 / 2;
+      }
+      .fig__pq {
+        grid-template-columns: 1fr;
+      }
+      .fig__pqimg {
+        border-right: none;
+        border-bottom: var(--border);
+        aspect-ratio: 3 / 2;
+      }
+      .depth__cards {
         grid-template-columns: 1fr;
       }
     }
