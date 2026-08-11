@@ -1,4 +1,6 @@
 ---
+import sharp from 'sharp';
+import path from 'node:path';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SiteNav from '../../components/SiteNav.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
@@ -31,6 +33,23 @@ const { cs } = Astro.props;
 const isPowernaut = cs.slug === 'powernaut';
 const diagramsFor = (idx: number): string[] => (isPowernaut ? (powernautDiagrams[idx] ?? []) : []);
 const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
+
+// Build-time aspect ratios so paired images render as a justified row —
+// equal height, widths proportional to each image (matches the PDF layout).
+async function aspectRatio(src: string): Promise<number> {
+  try {
+    const meta = await sharp(path.join(process.cwd(), 'public', src)).metadata();
+    return meta.width && meta.height ? meta.width / meta.height : 1;
+  } catch {
+    return 1;
+  }
+}
+const gridSrcs = new Set<string>();
+for (const beat of cs.beats)
+  for (const fig of beat.figures ?? [])
+    if (fig.layout === 'grid') for (const im of fig.imgs) gridSrcs.add(im.src);
+const arMap: Record<string, number> = {};
+for (const src of gridSrcs) arMap[src] = await aspectRatio(src);
 ---
 
 <BaseLayout title={`${cs.name} — Hayden Slaughter`} description={cs.oneLiner}>
@@ -95,12 +114,12 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
             {beat.figures?.map((fig: Figure) => (
               <figure class="fig">
                 {fig.layout === 'grid' && (
-                  <div
-                    class:list={['fig__grid', { 'fig__grid--contain': fig.imgs.some((im) => im.fit === 'contain') }]}
-                    style={`--cols:${fig.cols ?? '1fr 1fr'}`}
-                  >
+                  <div class="fig__grid">
                     {fig.imgs.map((im) => (
-                      <div class="fig__cell" style={im.bg ? `background:${im.bg}` : ''}>
+                      <div
+                        class="fig__cell"
+                        style={`flex:${(arMap[im.src] ?? 1).toFixed(4)} 1 0;${im.bg ? `background:${im.bg}` : ''}`}
+                      >
                         <img src={im.src} alt={im.alt} style={imgStyle(im)} loading="lazy" decoding="async" />
                       </div>
                     ))}
@@ -342,14 +361,16 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
       color: var(--grey-2);
     }
 
-    /* Two images side by side — each in its OWN frame (matches the PDF) */
+    /* Paired images as a justified row — equal height, widths proportional to
+       each image's aspect ratio, each in its own frame (matches the PDF). */
     .fig__grid {
-      display: grid;
-      grid-template-columns: var(--cols);
+      display: flex;
       gap: 22px;
-      align-items: start;
+      align-items: flex-start;
     }
     .fig__cell {
+      flex: 1 1 0; /* overridden inline with the image's aspect ratio */
+      min-width: 0;
       border: var(--border);
       box-shadow: var(--shadow-hard);
       background: var(--paper);
@@ -584,7 +605,10 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
     /* ── Responsive ─────────────────────────────────────── */
     @media (max-width: 640px) {
       .fig__grid {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+      }
+      .fig__cell {
+        flex: 0 0 auto; /* stack full-width, natural height */
       }
       .fig__pq {
         grid-template-columns: 1fr;
