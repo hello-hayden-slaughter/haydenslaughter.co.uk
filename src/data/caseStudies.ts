@@ -26,7 +26,7 @@ export interface Figure {
    * frame = image shown whole on a padded light background (diagrams, screens, portraits).
    * photo-quote = a cover photo beside a pull-quote in one bordered box.
    */
-  layout: 'band' | 'grid' | 'frame' | 'photo-quote';
+  layout: 'band' | 'grid' | 'frame' | 'photo-quote' | 'photo';
   imgs: Img[];
   /** grid-template-columns for grid / photo-quote layouts. */
   cols?: string;
@@ -181,8 +181,8 @@ const indra: CaseStudy = {
           caption: `The customer app. Charging status, scheduling and cost, simple enough to check at a glance.`,
         },
         {
-          layout: 'frame',
-          imgs: [img('indra-9.jpg', 'Collecting the award with the team', 'natural')],
+          layout: 'photo',
+          imgs: [img('indra-9.jpg', 'Collecting the award with the team')],
           caption: `Best Use of Technology & Trends, Herefordshire & Worcestershire Chamber of Commerce Business Awards 2024, collected with the team.`,
         },
       ],
@@ -199,8 +199,8 @@ const indra: CaseStudy = {
           layout: 'grid',
           cols: '1fr 1fr',
           imgs: [
-            img('indra-10.jpg', 'The discover, define, build process the function ran on', 'contain', '#F4F7F6'),
-            img('indra-11.jpg', 'The numbers the function kept producing'),
+            img('indra-10.jpg', 'The discover, define, build process the function ran on', 'contain', '#f4f7f6'),
+            img('indra-11.jpg', 'The numbers the function kept producing', 'contain', '#f4f7f6'),
           ],
           caption: `The process the function ran on, and the numbers it kept producing.`,
         },
@@ -215,8 +215,8 @@ const indra: CaseStudy = {
       ],
       figures: [
         {
-          layout: 'frame',
-          imgs: [img('indra-12.jpg', 'The team together', 'natural')],
+          layout: 'photo',
+          imgs: [img('indra-12.jpg', 'The team together')],
           caption: `The team that kept shipping.`,
         },
       ],

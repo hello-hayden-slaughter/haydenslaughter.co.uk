@@ -73,12 +73,10 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
       {
         cs.beats.map((beat, i) => (
           <section class="beat">
+            <span class="beat__n">{String(i + 1).padStart(2, '0')}</span>
             <div class="beat__head">
-              <span class="beat__n">{String(i + 1).padStart(2, '0')}</span>
-              <div>
-                <h2 class="beat__title">{beat.title}</h2>
-                <p class="beat__subhead">{beat.subhead}</p>
-              </div>
+              <h2 class="beat__title">{beat.title}</h2>
+              <p class="beat__subhead">{beat.subhead}</p>
             </div>
             <div class="beat__body">
               {beat.body.map((p) => (
@@ -97,7 +95,10 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
             {beat.figures?.map((fig: Figure) => (
               <figure class="fig">
                 {fig.layout === 'grid' && (
-                  <div class="fig__grid" style={`--cols:${fig.cols ?? '1fr 1fr'}`}>
+                  <div
+                    class:list={['fig__grid', { 'fig__grid--contain': fig.imgs.some((im) => im.fit === 'contain') }]}
+                    style={`--cols:${fig.cols ?? '1fr 1fr'}`}
+                  >
                     {fig.imgs.map((im) => (
                       <div class="fig__cell" style={im.bg ? `background:${im.bg}` : ''}>
                         <img src={im.src} alt={im.alt} style={imgStyle(im)} loading="lazy" decoding="async" />
@@ -108,6 +109,12 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
 
                 {fig.layout === 'frame' && (
                   <div class="fig__frame">
+                    <img src={fig.imgs[0].src} alt={fig.imgs[0].alt} loading="lazy" decoding="async" />
+                  </div>
+                )}
+
+                {fig.layout === 'photo' && (
+                  <div class="fig__photo">
                     <img src={fig.imgs[0].src} alt={fig.imgs[0].alt} loading="lazy" decoding="async" />
                   </div>
                 )}
@@ -208,7 +215,6 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
     .cs-oneliner {
       margin: 18px 0 0;
       color: var(--paper);
-      max-width: 20ch;
       font-size: clamp(30px, 5vw, 46px);
     }
     .cs-standfirst {
@@ -283,21 +289,22 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
       background: var(--teal);
     }
 
-    /* ── Beats ──────────────────────────────────────────── */
+    /* ── Beats (number hangs in the gutter, text aligns to it) ── */
     .beat {
+      position: relative;
       padding-top: var(--space-7);
+      padding-left: 46px;
     }
     .beat__head {
-      display: flex;
-      gap: 18px;
-      align-items: baseline;
       margin-bottom: var(--space-2);
     }
     .beat__n {
+      position: absolute;
+      left: 0;
+      top: calc(var(--space-7) + 5px);
       font-family: var(--font-label);
       font-size: 20px;
       color: var(--teal);
-      flex: none;
     }
     .beat__title {
       margin: 0;
@@ -354,6 +361,22 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
       object-fit: cover;
       display: block;
     }
+    /* Contain grid: diagrams/screens shown whole, centred, not cropped */
+    .fig__grid--contain {
+      height: auto;
+    }
+    .fig__grid--contain .fig__cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .fig__grid--contain .fig__cell img {
+      width: 100%;
+      height: auto;
+      max-height: 300px;
+      object-fit: contain;
+    }
 
     .fig__frame {
       border: var(--border);
@@ -362,6 +385,18 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
       padding: clamp(20px, 4vw, 44px);
     }
     .fig__frame img {
+      width: 100%;
+      display: block;
+    }
+
+    /* Full-bleed photo: fills the box edge to edge, whole image, no padding */
+    .fig__photo {
+      border: var(--border);
+      box-shadow: var(--shadow-hard);
+      overflow: hidden;
+      background: var(--canvas);
+    }
+    .fig__photo img {
       width: 100%;
       display: block;
     }
@@ -487,10 +522,19 @@ const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 18px;
-      align-items: start;
+      align-items: stretch;
     }
     .pn-grid .pn-figure {
       margin: 0;
+      display: flex;
+    }
+    .pn-grid .pn-figure :global(> figure) {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .pn-grid .pn-figure :global(> figure > div) {
+      flex: 1;
     }
 
     /* ── Depth (boxed cards) ────────────────────────────── */
