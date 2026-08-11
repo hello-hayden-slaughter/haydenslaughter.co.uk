@@ -6,32 +6,12 @@ import SiteNav from '../../components/SiteNav.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { caseStudies, type Figure, type Img } from '../../data/caseStudies';
 
-// Powernaut is diagram-led; its figures are inline SVG/HTML lifted from source.
-import pnHero from '../../diagrams/powernaut/hero.html?raw';
-import pnFig1 from '../../diagrams/powernaut/fig1.html?raw';
-import pnFig2 from '../../diagrams/powernaut/fig2.html?raw';
-import pnFig3 from '../../diagrams/powernaut/fig3.html?raw';
-import pnFig4 from '../../diagrams/powernaut/fig4.html?raw';
-import pnFig5 from '../../diagrams/powernaut/fig5.html?raw';
-import pnFig6 from '../../diagrams/powernaut/fig6.html?raw';
-import pnFig7 from '../../diagrams/powernaut/fig7.html?raw';
-
-const powernautDiagrams: Record<number, string[]> = {
-  0: [pnFig1],
-  1: [pnFig2],
-  2: [pnFig3],
-  3: [pnFig4, pnFig5],
-  4: [pnFig6],
-  5: [pnFig7],
-};
-
 export function getStaticPaths() {
   return caseStudies.map((cs) => ({ params: { slug: cs.slug }, props: { cs } }));
 }
 
 const { cs } = Astro.props;
 const isPowernaut = cs.slug === 'powernaut';
-const diagramsFor = (idx: number): string[] => (isPowernaut ? (powernautDiagrams[idx] ?? []) : []);
 const imgStyle = (im: Img) => (im.fit ? `object-fit:${im.fit}` : '');
 
 // Build-time aspect ratios so paired images render as a justified row —
@@ -71,7 +51,14 @@ for (const src of gridSrcs) arMap[src] = await aspectRatio(src);
     <div class="doc cs-body">
       {
         isPowernaut && (
-          <div class="pn-figure pn-hero" set:html={pnHero} />
+          <div class="fig__diagram cs-diagram-hero">
+            <img
+              src="/portfolio/img/pn-hero.png"
+              alt="The Powernaut product strategy in one shape — assets, operations and markets around one shared data core"
+              loading="eager"
+              decoding="async"
+            />
+          </div>
         )
       }
       {
@@ -138,6 +125,12 @@ for (const src of gridSrcs) arMap[src] = await aspectRatio(src);
                   </div>
                 )}
 
+                {fig.layout === 'diagram' && (
+                  <div class="fig__diagram">
+                    <img src={fig.imgs[0].src} alt={fig.imgs[0].alt} loading="lazy" decoding="async" />
+                  </div>
+                )}
+
                 {fig.layout === 'photo-quote' && (
                   <div class="fig__pq" style={`--cols:${fig.cols ?? '0.55fr 1fr'}`}>
                     <div class="fig__pqimg">
@@ -161,13 +154,6 @@ for (const src of gridSrcs) arMap[src] = await aspectRatio(src);
               </div>
             )}
 
-            {diagramsFor(i).length === 2 ? (
-              <div class="pn-grid">
-                {diagramsFor(i).map((d) => <div class="pn-figure" set:html={d} />)}
-              </div>
-            ) : (
-              diagramsFor(i).map((d) => <div class="pn-figure" set:html={d} />)
-            )}
           </section>
         ))
       }
@@ -352,13 +338,23 @@ for (const src of gridSrcs) arMap[src] = await aspectRatio(src);
     .fig {
       margin: var(--space-3) 0 0;
     }
-    .fig figcaption,
-    .pn-figure + figcaption {
+    .fig figcaption {
       margin-top: 12px;
       font-family: var(--font-mono);
       font-size: 12px;
       line-height: 1.5;
       color: var(--grey-2);
+    }
+
+    /* Powernaut diagrams: pre-rendered PNGs with their frame baked in, so the
+       wrapper adds none of its own — just scale the image to the column. */
+    .fig__diagram img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .cs-diagram-hero {
+      margin-top: var(--space-3);
     }
 
     /* Paired images as a justified row — equal height, widths proportional to
@@ -505,42 +501,6 @@ for (const src of gridSrcs) arMap[src] = await aspectRatio(src);
       color: var(--grey-3);
     }
 
-    /* ── Powernaut embedded diagrams ────────────────────── */
-    .pn-hero {
-      margin: var(--space-3) 0 0;
-    }
-    .pn-figure {
-      margin: var(--space-3) 0 0;
-      max-width: 100%;
-      overflow-x: auto;
-    }
-    .pn-figure :global(figure) {
-      margin: 0;
-    }
-    .pn-figure :global(img) {
-      max-width: 100%;
-      height: auto;
-    }
-    .pn-grid {
-      margin: var(--space-3) 0 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-    .pn-grid .pn-figure {
-      margin: 0;
-      display: flex;
-    }
-    .pn-grid .pn-figure :global(> figure) {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .pn-grid .pn-figure :global(> figure > div) {
-      flex: 1;
-    }
-
     /* ── Depth (boxed cards) ────────────────────────────── */
     .depth {
       padding-top: var(--space-7);
@@ -625,7 +585,6 @@ for (const src of gridSrcs) arMap[src] = await aspectRatio(src);
         border-left: none;
         border-top: var(--border);
       }
-      .pn-grid,
       .depth__grid {
         grid-template-columns: 1fr;
       }

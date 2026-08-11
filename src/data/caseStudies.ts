@@ -22,11 +22,13 @@ export interface Quote {
 export interface Figure {
   /**
    * band = full-width fixed-height cover strip (hero).
-   * grid = equal-height cover images side by side in one bordered box.
+   * grid = justified row of images, equal height, each in its own frame.
    * frame = image shown whole on a padded light background (diagrams, screens, portraits).
    * photo-quote = a cover photo beside a pull-quote in one bordered box.
+   * photo = single image, full-bleed in its own frame.
+   * diagram = pre-rendered PNG with its frame baked in; wrapper adds none.
    */
-  layout: 'band' | 'grid' | 'frame' | 'photo-quote' | 'photo';
+  layout: 'band' | 'grid' | 'frame' | 'photo-quote' | 'photo' | 'diagram';
   imgs: Img[];
   /** grid-template-columns for grid / photo-quote layouts. */
   cols?: string;
@@ -270,6 +272,13 @@ const powernaut: CaseStudy = {
         `I came in to take design work off a team that had too much of it. There was no product team and no plan for one. Within a couple of weeks they asked me to go to five days. A few weeks after that we agreed an equity share, and I took on design and product.`,
         `The questions that mattered, what we should build and why, had no owner, so I started answering them. A few months in the founder handed the rest over, and I have run product since.`,
       ],
+      figures: [
+        {
+          layout: 'diagram',
+          imgs: [img('pn-fig1.png', 'A sites data table from the delivery work — staging, dummy data')],
+          caption: `The delivery design work the contract was for. Staging, dummy data.`,
+        },
+      ],
     },
     {
       title: 'The first product call',
@@ -279,6 +288,13 @@ const powernaut: CaseStudy = {
         `The numbers said the same thing about the pilots. Fewer than one in fifty of the end customers we needed were signing up, fewer than half the sites were profitable, customer service was killing us, and the rollout target the work was meant to unlock was out of reach.`,
         `So I chose. We doubled down on the two that were pulling us forward and finished the other three's pilots properly, final reports, forecast against realised savings and happy customers. We left that market with our reputation and relationships intact. It allowed a stretched team to focus on the one place we had traction, and it set up everything that followed.`,
       ],
+      figures: [
+        {
+          layout: 'diagram',
+          imgs: [img('pn-fig2.png', 'The two paying customers set against the three pilots')],
+          caption: `The two-against-three split.`,
+        },
+      ],
     },
     {
       title: 'Validating it, and hitting the ceiling',
@@ -286,6 +302,13 @@ const powernaut: CaseStudy = {
       body: [
         `A market you have chosen is still a guess, so I built the research to test the bet properly. It came back against me. The market was consolidating, the bigger players were building their own tools in house, and the pool of right-sized customers left over was too small to carry a venture-scale company.`,
         `So I made the case against the direction I had sold weeks earlier. Not to abandon the market, the customers we had there stayed and mattered, but to stop treating it as the only bet. We re-pointed the effort before it burnt runway, and turned the same research engine onto the bigger question of where this company could actually win.`,
+      ],
+      figures: [
+        {
+          layout: 'diagram',
+          imgs: [img('pn-fig3.png', 'The market ceiling that the research surfaced')],
+          caption: `The ceiling.`,
+        },
       ],
     },
     {
@@ -298,6 +321,18 @@ const powernaut: CaseStudy = {
         `The thesis, and the customer it defines, became the company strategy. I wrote it, the founders made their adjustments and took it to the investors, who had been pushing for a clearer direction. They backed it.`,
       ],
       quote: { text: `Interest is not demand.`, note: `The rule that ran the whole programme.` },
+      figures: [
+        {
+          layout: 'diagram',
+          imgs: [img('pn-fig4.png', '540 outreach messages narrowed to 26 interviews across nine countries')],
+          caption: `The research funnel.`,
+        },
+        {
+          layout: 'diagram',
+          imgs: [img('pn-fig5.png', 'The core finding — coordination overhead stays fixed as assets get smaller')],
+          caption: `The core finding, redrawn.`,
+        },
+      ],
     },
     {
       title: 'The product strategy, in one shape',
@@ -306,6 +341,12 @@ const powernaut: CaseStudy = {
         `Underneath the company strategy I built the product strategy, and I reduced it to a single shape. One shared layer of data, the three stages of the operation it serves, and the insight on top that makes the whole thing legible. In our customers' worlds those stages run separately, every handover is manual, and the numbers degrade at each boundary. The shape is what joins them back up.`,
         `One object doing four jobs. My test for it is blunt. If you cannot sketch it in thirty seconds with a marker, it is not doing its job. And it gives the whole company something to say no with.`,
         `It did not stay a product artefact. Marketing writes positioning and messaging from the shape. Business development picks which customers to chase off the back of it, and I work that edge with them weekly, who is in, who is out, what we should charge. A forward-deployed engineering initiative rolled out from the same picture. The whole business runs from one page, and that page is the strategy.`,
+      ],
+      figures: [
+        {
+          layout: 'diagram',
+          imgs: [img('pn-fig6.png', 'The product strategy in one shape — shared data, three stages, insight on top')],
+        },
       ],
     },
     {
@@ -316,6 +357,13 @@ const powernaut: CaseStudy = {
         `One customer liked a demo enough to tell us to quote them on our own website. When we asked why they had chosen us, the answer was the visibility and control.`,
       ],
       quote: { text: `Something we've not had before.`, attrib: 'A Powernaut customer' },
+      figures: [
+        {
+          layout: 'diagram',
+          imgs: [img('pn-fig7.png', 'The three insight layers shipped onto the platform')],
+          caption: `The three insight layers.`,
+        },
+      ],
     },
   ],
   depthHeading: 'More of what I built at Powernaut',
