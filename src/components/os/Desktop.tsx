@@ -1,7 +1,12 @@
 /** @jsxImportSource preact */
 import { useEffect, useRef, useState } from 'preact/hooks';
-import type { JSX } from 'preact';
 import { APPS, SECTIONS, type AppDef } from './apps';
+
+/**
+ * Three responsive modes, per the design's getMode().
+ * phone < 640 · tablet < 1100 · desktop >= 1100
+ */
+export type Mode = 'phone' | 'tablet' | 'desktop';
 
 interface WinState {
   x: number;
@@ -17,9 +22,51 @@ type DragState =
   | { id: string; mode: 'resize'; sx: number; sy: number; ow: number; oh: number }
   | null;
 
+interface IconLayout {
+  pos: Record<string, { x: number; y: number }>;
+  labels: { text: string; x: number; y: number }[];
+}
+
 const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi);
 
 const byId = (id: string): AppDef | undefined => APPS.find((a) => a.id === id);
+
+const readMode = (): Mode => {
+  const w = window.innerWidth;
+  return w < 640 ? 'phone' : w < 1100 ? 'tablet' : 'desktop';
+};
+
+/** Four corner clusters, ported from the design's computeIconLayout(). */
+function computeIconLayout(): IconLayout {
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  return {
+    pos: {
+      welcome: { x: 24, y: 66 },
+      readme: { x: 122, y: 66 },
+      cv: { x: 24, y: 172 },
+      journey: { x: 122, y: 172 },
+      how: { x: 24, y: 278 },
+      work: { x: W - 236, y: 66 },
+      ai: { x: W - 138, y: 66 },
+      olive: { x: W - 236, y: 172 },
+      pip: { x: W - 138, y: 172 },
+      browser: { x: 24, y: H - 264 },
+      chat: { x: 122, y: H - 264 },
+      hello: { x: 220, y: H - 264 },
+      sol: { x: W - 336, y: H - 370 },
+      mines: { x: W - 238, y: H - 370 },
+      fris: { x: W - 336, y: H - 264 },
+      climb: { x: W - 238, y: H - 264 },
+    },
+    labels: [
+      { text: 'DOCUMENTS', x: 28, y: 44 },
+      { text: 'SHIPPED WORK', x: W - 232, y: 44 },
+      { text: 'ELSEWHERE', x: 28, y: H - 288 },
+      { text: 'PROCRASTINATION', x: W - 332, y: H - 394 },
+    ],
+  };
+}
 
 function clampRect(rect: AppDef['rect']) {
   const vw = window.innerWidth;
@@ -43,8 +90,15 @@ export default function Desktop() {
   const [launcher, setLauncher] = useState(false);
   const [clock, setClock] = useState('');
   const [dragging, setDragging] = useState(false);
+  // Start as 'desktop' so the first paint matches the pre-hydration shell, then
+  // correct on mount. Windows only carry an inline rect in desktop mode.
+  const [mode, setMode] = useState<Mode>('desktop');
+  const [layout, setLayout] = useState<IconLayout | null>(null);
   const zRef = useRef(10);
   const dragRef = useRef<DragState>(null);
+
+  const isDesktop = mode === 'desktop';
+  const isMobile = !isDesktop;
 
   const nextZ = () => (zRef.current += 1);
 
@@ -79,9 +133,20 @@ export default function Desktop() {
     setFocused((f) => (f === id ? null : f));
   };
 
+  /** On phone/tablet there is no minimise. The control closes instead. */
   const minimize = (id: string) => {
+    if (isMobile) {
+      close(id);
+      return;
+    }
     setWins((prev) => (prev[id] ? { ...prev, [id]: { ...prev[id], min: true } } : prev));
     setFocused((f) => (f === id ? null : f));
+  };
+
+  const closeAll = () => {
+    setWins({});
+    setFocused(null);
+    setLauncher(false);
   };
 
   const taskClick = (id: string) => {
@@ -95,15 +160,16 @@ export default function Desktop() {
     }
   };
 
-  const startDrag = (e: PointerEvent, id: string, mode: 'move' | 'resize') => {
+  const startDrag = (e: PointerEvent, id: string, dragMode: 'move' | 'resize') => {
+    if (!isDesktop) return;
     e.preventDefault();
     focus(id);
     const w = wins[id];
     if (!w) return;
     dragRef.current =
-      mode === 'move'
-        ? { id, mode, sx: e.clientX, sy: e.clientY, ox: w.x, oy: w.y }
-        : { id, mode, sx: e.clientX, sy: e.clientY, ow: w.w, oh: w.h };
+      dragMode === 'move'
+        ? { id, mode: dragMode, sx: e.clientX, sy: e.clientY, ox: w.x, oy: w.y }
+        : { id, mode: dragMode, sx: e.clientX, sy: e.clientY, ow: w.w, oh: w.h };
     setDragging(true);
     try {
       (e.currentTarget as Element).setPointerCapture(e.pointerId);
@@ -146,6 +212,16 @@ export default function Desktop() {
   }, []);
 
   useEffect(() => {
+    const sync = () => {
+      setMode(readMode());
+      setLayout(computeIconLayout());
+    };
+    sync();
+    window.addEventListener('resize', sync);
+    return () => window.removeEventListener('resize', sync);
+  }, []);
+
+  useEffect(() => {
     const tick = () => setClock(fmtClock(new Date()));
     tick();
     const iv = window.setInterval(tick, 15000);
@@ -153,12 +229,46 @@ export default function Desktop() {
   }, []);
 
   const openList = Object.entries(wins);
+  const iconStyle = (id: string) => {
+    if (!isDesktop || !layout) return undefined;
+    const p = layout.pos[id];
+    return p ? `position:absolute;left:${p.x}px;top:${p.y}px;width:96px` : undefined;
+  };
+
+  const renderIcon = (app: AppDef) => (
+    <button
+      key={app.id}
+      class="os-icon"
+      type="button"
+      style={iconStyle(app.id)}
+      onClick={() => openApp(app)}
+    >
+      <span class="os-icon__art">{app.icon}</span>
+      <span class="os-icon__label">{app.iconLabel ?? app.title}</span>
+    </button>
+  );
 
   return (
     <div
-      class={`os-root${dragging ? ' os-root--dragging' : ''}`}
+      class={`os-root os-root--${mode}${dragging ? ' os-root--dragging' : ''}`}
       onPointerDown={() => launcher && setLauncher(false)}
     >
+      {/* Status bar — phone/tablet only */}
+      <div class="os-statusbar" aria-hidden="true">
+        <span class="os-statusbar__signal">
+          <i style="height:4px" />
+          <i style="height:7px" />
+          <i style="height:10px" />
+          <i class="os-statusbar__signal--off" style="height:13px" />
+        </span>
+        <span class="os-statusbar__label">SLGHTR</span>
+        <span class="os-statusbar__spacer" />
+        <span class="os-statusbar__label">{clock || '··:··'}</span>
+        <span class="os-statusbar__battery">
+          <i />
+        </span>
+      </div>
+
       {/* Wallpaper */}
       <div class="os-wallpaper">
         <span>
@@ -167,21 +277,23 @@ export default function Desktop() {
         </span>
       </div>
 
-      {/* Desktop icons — one tidy column per section */}
+      {/* Desktop cluster labels — desktop mode only */}
+      {isDesktop &&
+        layout?.labels.map((l) => (
+          <span key={l.text} class="os-cluster" style={`left:${l.x}px;top:${l.y}px`}>
+            {l.text}
+          </span>
+        ))}
+
+      {/* Icons — absolutely placed on desktop, a grid on phone/tablet */}
       <div class="os-icons">
         {SECTIONS.map((section) => (
-          <div class="os-iconcol" key={section}>
-            <span class="os-seclabel">{section}</span>
-            {APPS.filter((a) => a.section === section).map((app) => (
-              <button class="os-icon" type="button" onClick={() => openApp(app)}>
-                <span
-                  class={`os-icon__tile${app.rounded ? ' os-icon__tile--round' : ''}`}
-                  style={`background:${app.color}`}
-                />
-                <span class="os-icon__label">{app.iconLabel ?? app.title}</span>
-              </button>
-            ))}
-          </div>
+          <>
+            <span class="os-seclabel" key={section}>
+              {section}
+            </span>
+            {APPS.filter((a) => a.section === section).map(renderIcon)}
+          </>
         ))}
       </div>
 
@@ -193,7 +305,11 @@ export default function Desktop() {
           <div
             key={id}
             class="os-win"
-            style={`left:${w.x}px;top:${w.y}px;width:${w.w}px;height:${w.h}px;z-index:${w.z}`}
+            style={
+              isDesktop
+                ? `left:${w.x}px;top:${w.y}px;width:${w.w}px;height:${w.h}px;z-index:${w.z}`
+                : `z-index:${w.z}`
+            }
             onPointerDown={() => focus(id)}
           >
             <div class="os-win__bar" onPointerDown={(e) => startDrag(e as PointerEvent, id, 'move')}>
@@ -202,21 +318,23 @@ export default function Desktop() {
                 <button
                   class="os-win__btn"
                   type="button"
-                  aria-label="Minimise"
+                  aria-label={isMobile ? 'Close' : 'Minimise'}
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={() => minimize(id)}
                 >
-                  _
+                  {isMobile ? 'X' : '_'}
                 </button>
-                <button
-                  class="os-win__btn"
-                  type="button"
-                  aria-label="Close"
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onClick={() => close(id)}
-                >
-                  X
-                </button>
+                {!isMobile && (
+                  <button
+                    class="os-win__btn"
+                    type="button"
+                    aria-label="Close"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={() => close(id)}
+                  >
+                    X
+                  </button>
+                )}
               </span>
             </div>
             <div class="os-win__menubar">
@@ -231,19 +349,21 @@ export default function Desktop() {
                 <p class="os-win__empty">This app is coming soon — it's on the roadmap.</p>
               )}
             </div>
-            <div
-              class="os-win__resize"
-              onPointerDown={(e) => {
-                e.stopPropagation();
-                startDrag(e as PointerEvent, id, 'resize');
-              }}
-            />
+            {isDesktop && (
+              <div
+                class="os-win__resize"
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  startDrag(e as PointerEvent, id, 'resize');
+                }}
+              />
+            )}
           </div>
         );
       })}
 
-      {/* Launcher */}
-      {launcher && (
+      {/* Launcher — desktop mode only */}
+      {launcher && isDesktop && (
         <div class="os-launcher" onPointerDown={(e) => e.stopPropagation()}>
           <div class="os-launcher__rail">
             <span>SLAUGHTER OS</span>
@@ -287,7 +407,7 @@ export default function Desktop() {
         </div>
       )}
 
-      {/* Taskbar */}
+      {/* Taskbar — desktop mode only */}
       <div class="os-taskbar">
         <button
           class="os-start"
@@ -297,7 +417,7 @@ export default function Desktop() {
           onClick={() => setLauncher((v) => !v)}
         >
           <span class="os-start__logo" />
-          START
+          MENU
         </button>
         <div class="os-tasklist">
           {openList.map(([id]) => {
@@ -316,6 +436,40 @@ export default function Desktop() {
           })}
         </div>
         <span class="os-clock">{clock || '··:··'}</span>
+      </div>
+
+      {/* Dock — phone/tablet only */}
+      <div class="os-dock">
+        <button class="os-dockbtn" type="button" onClick={closeAll}>
+          <span class="os-dockbtn__tile os-dockbtn__tile--home">⌂</span>
+          <span class="os-dockbtn__label">HOME</span>
+        </button>
+        <button
+          class="os-dockbtn"
+          type="button"
+          onClick={() => {
+            const a = byId('readme');
+            if (a) openApp(a);
+          }}
+        >
+          <span class="os-dockbtn__tile os-dockbtn__tile--txt">TXT</span>
+          <span class="os-dockbtn__label">ABOUT.ME</span>
+        </button>
+        <button
+          class="os-dockbtn"
+          type="button"
+          onClick={() => {
+            const a = byId('cv');
+            if (a) openApp(a);
+          }}
+        >
+          <span class="os-dockbtn__tile os-dockbtn__tile--cv">cv</span>
+          <span class="os-dockbtn__label">NORMAL.CV</span>
+        </button>
+        <a class="os-dockbtn" href="mailto:hello@haydenslaughter.co.uk">
+          <span class="os-dockbtn__tile os-dockbtn__tile--hello">@</span>
+          <span class="os-dockbtn__label">HELLO</span>
+        </a>
       </div>
 
       {/* Boot overlay (CSS auto-dismisses; hidden under reduced-motion) */}

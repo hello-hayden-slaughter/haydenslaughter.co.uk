@@ -8,9 +8,11 @@ export interface AppDef {
   id: string;
   title: string;
   iconLabel?: string;
-  section: 'DOCUMENTS' | 'SHIPPED WORK' | 'ELSEWHERE' | 'GAMES';
+  section: 'DOCUMENTS' | 'SHIPPED WORK' | 'ELSEWHERE' | 'PROCRASTINATION';
+  /** Swatch colour, used by the launcher list. */
   color: string;
-  rounded?: boolean;
+  /** Desktop icon art. See the `.osi-*` blocks in os.css. */
+  icon: ComponentChildren;
   rect: { x: number; y: number; w: number; h: number };
   href?: string;
   menus?: string[];
@@ -165,6 +167,11 @@ export const APPS: AppDef[] = [
     iconLabel: 'WELCOME',
     section: 'DOCUMENTS',
     color: 'var(--yellow)',
+    icon: (
+      <span class="osi-welcome">
+        <span class="osi-welcome__note">HI!</span>
+      </span>
+    ),
     rect: { x: 430, y: 100, w: 470, h: 320 },
     content: (
       <>
@@ -186,6 +193,22 @@ export const APPS: AppDef[] = [
     iconLabel: 'ABOUT.ME',
     section: 'DOCUMENTS',
     color: 'var(--paper)',
+    icon: (
+      <span class="osi-readme">
+        <span class="osi-readme__tab" />
+        <span class="osi-readme__card">
+          <span class="osi-readme__photo">
+            <span class="osi-readme__head" />
+            <span class="osi-readme__body" />
+          </span>
+          <span class="osi-readme__lines">
+            <i />
+            <i />
+            <i />
+          </span>
+        </span>
+      </span>
+    ),
     rect: { x: 150, y: 60, w: 560, h: 470 },
     content: <AboutWindow />,
   },
@@ -195,6 +218,14 @@ export const APPS: AppDef[] = [
     iconLabel: 'NORMAL.CV',
     section: 'DOCUMENTS',
     color: 'var(--white)',
+    icon: (
+      <span class="osi-cv">
+        <span class="osi-cv__collar osi-cv__collar--l" />
+        <span class="osi-cv__collar osi-cv__collar--r" />
+        <span class="osi-cv__head" />
+        <span class="osi-cv__body" />
+      </span>
+    ),
     menus: ['FILE', 'HELP'],
     rect: { x: 240, y: 40, w: 660, h: 640 },
     content: <CvWindow />,
@@ -204,6 +235,13 @@ export const APPS: AppDef[] = [
     title: 'HOW I WORK',
     section: 'DOCUMENTS',
     color: 'var(--paper)',
+    icon: (
+      <span class="osi-how">
+        <i />
+        <i />
+        <i />
+      </span>
+    ),
     rect: { x: 300, y: 90, w: 520, h: 420 },
     content: <HowWindow />,
   },
@@ -212,6 +250,15 @@ export const APPS: AppDef[] = [
     title: 'JOURNEY.LOG',
     section: 'DOCUMENTS',
     color: 'var(--paper)',
+    icon: (
+      <span class="osi-journey">
+        <span class="osi-journey__foot" />
+        <span class="osi-journey__step" />
+        <span class="osi-journey__step" />
+        <span class="osi-journey__step" />
+        <span class="osi-journey__pin" />
+      </span>
+    ),
     rect: { x: 420, y: 120, w: 560, h: 460 },
     content: <FitJourneyWindow />,
   },
@@ -221,6 +268,13 @@ export const APPS: AppDef[] = [
     iconLabel: 'THE WORK',
     section: 'SHIPPED WORK',
     color: 'var(--yellow)',
+    icon: (
+      <span class="osi-work">
+        <span class="osi-work__tab" />
+        <span class="osi-work__sheet" />
+        <span class="osi-work__sheet" />
+      </span>
+    ),
     rect: { x: 300, y: 70, w: 560, h: 560 },
     content: <WorkWindow />,
   },
@@ -229,6 +283,15 @@ export const APPS: AppDef[] = [
     title: 'SHIPPED.EXE',
     section: 'SHIPPED WORK',
     color: 'var(--red)',
+    icon: (
+      <span class="osi-ai">
+        <span class="osi-ai__bar">
+          <i />
+          <i />
+        </span>
+        <span class="osi-ai__label">AI</span>
+      </span>
+    ),
     rect: { x: 440, y: 60, w: 520, h: 500 },
     content: <ShippedWindow />,
   },
@@ -237,7 +300,13 @@ export const APPS: AppDef[] = [
     title: 'OLIVE.APP',
     section: 'SHIPPED WORK',
     color: 'var(--mint)',
-    rounded: true,
+    icon: (
+      <span class="osi-olive">
+        <span class="osi-olive__fruit">
+          <span class="osi-olive__pit" />
+        </span>
+      </span>
+    ),
     rect: { x: 540, y: 40, w: 420, h: 300 },
     content: (
       <>
@@ -254,7 +323,12 @@ export const APPS: AppDef[] = [
     title: 'PIP.APP',
     section: 'SHIPPED WORK',
     color: 'var(--ink)',
-    rounded: true,
+    icon: (
+      <span class="osi-pip">
+        <span class="osi-pip__name">pip</span>
+        <span class="osi-pip__caret" />
+      </span>
+    ),
     rect: { x: 300, y: 90, w: 460, h: 320 },
     content: (
       <>
@@ -271,7 +345,7 @@ export const APPS: AppDef[] = [
     title: 'NAVIGATOR',
     section: 'ELSEWHERE',
     color: '#7CC7E8',
-    rounded: true,
+    icon: <span class="osi-browser" />,
     rect: { x: 360, y: 80, w: 640, h: 460 },
   },
   {
@@ -280,7 +354,13 @@ export const APPS: AppDef[] = [
     iconLabel: 'ASK HAYDEN',
     section: 'ELSEWHERE',
     color: 'var(--paper)',
-    rounded: true,
+    icon: (
+      <span class="osi-chat">
+        <i />
+        <i />
+        <i />
+      </span>
+    ),
     rect: { x: 640, y: 80, w: 400, h: 540 },
   },
   {
@@ -289,6 +369,11 @@ export const APPS: AppDef[] = [
     iconLabel: 'SAY HELLO',
     section: 'ELSEWHERE',
     color: 'var(--paper)',
+    icon: (
+      <span class="osi-hello">
+        <span class="osi-hello__flap" />
+      </span>
+    ),
     href: 'mailto:hello@haydenslaughter.co.uk',
     rect: { x: 0, y: 0, w: 0, h: 0 },
   },
@@ -296,29 +381,55 @@ export const APPS: AppDef[] = [
     id: 'sol',
     title: 'SOLITAIRE.EXE',
     iconLabel: 'SOLITAIRE',
-    section: 'GAMES',
+    section: 'PROCRASTINATION',
     color: '#2E5427',
+    icon: (
+      <span class="osi-sol">
+        <span class="osi-sol__card osi-sol__card--back" />
+        <span class="osi-sol__card osi-sol__card--front">♥</span>
+      </span>
+    ),
     rect: { x: 130, y: 70, w: 410, h: 500 },
   },
   {
     id: 'mines',
     title: 'MINES.EXE',
-    section: 'GAMES',
+    section: 'PROCRASTINATION',
     color: 'var(--grey-1)',
+    icon: (
+      <span class="osi-mines">
+        <span class="osi-mines__cell">✳</span>
+      </span>
+    ),
     rect: { x: 470, y: 110, w: 310, h: 480 },
   },
   {
     id: 'fris',
     title: 'FRISBEE.EXE',
-    section: 'GAMES',
+    section: 'PROCRASTINATION',
     color: '#7CC7E8',
+    icon: (
+      <span class="osi-fris">
+        <span class="osi-fris__disc" />
+        <span class="osi-fris__trail" />
+        <span class="osi-fris__trail" />
+      </span>
+    ),
     rect: { x: 250, y: 120, w: 480, h: 440 },
   },
   {
     id: 'climb',
     title: 'CLIMB.EXE',
-    section: 'GAMES',
+    section: 'PROCRASTINATION',
     color: 'var(--grey-2)',
+    icon: (
+      <span class="osi-climb">
+        <span class="osi-climb__hold" />
+        <span class="osi-climb__hold" />
+        <span class="osi-climb__hold" />
+        <span class="osi-climb__figure" />
+      </span>
+    ),
     rect: { x: 700, y: 60, w: 360, h: 540 },
   },
 ];
@@ -327,5 +438,5 @@ export const SECTIONS: AppDef['section'][] = [
   'DOCUMENTS',
   'SHIPPED WORK',
   'ELSEWHERE',
-  'GAMES',
+  'PROCRASTINATION',
 ];
